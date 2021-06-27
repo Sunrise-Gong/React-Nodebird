@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function* rootSaga() {}","map":{"version":3,"sources":["/Users/haedod-i/Desktop/React-Nodebird/prepare/front/sagas/index.js"],"names":["rootSaga"],"mappings":"AAAA,eAAe,UAAUA,QAAV,GAAqB,CAEnC","sourcesContent":["export default function* rootSaga() {\n    \n}"]},"metadata":{},"sourceType":"module"}
