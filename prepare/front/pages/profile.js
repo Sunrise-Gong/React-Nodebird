@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from '../components/AppLayout';
 import Head from 'next/head';
 
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 import { useSelector } from 'react-redux';
+import Router from 'next/router';
 
 const Profile = () => {
-    // const followerList = [{nickname: '재원이'}, {nickname: '선범이'}, {nickname: '나연'}]
-    // const followingList = [{nickname: '재원이'}, {nickname: '선범이'}, {nickname: '나연'}]
     const { me } = useSelector((state) => state.user);
 
+    useEffect(() => {
+        if (!(me && me.id)) { Router.push('/'); }
+    }, [me && me.id]);
+    
+    if (!me) { return <div>로그인 하라고!!!!</div>; }
+    
     return (
         <>
             <Head>

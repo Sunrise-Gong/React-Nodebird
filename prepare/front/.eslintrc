@@ -44,5 +44,6 @@
         "spaced-comment":"off",
         "arrow-body-style":"off",
         "array-callback-return":"off",
+        "no-param-reassign":"off",
     }
 }
