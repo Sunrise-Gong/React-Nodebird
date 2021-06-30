@@ -14,7 +14,7 @@ const Profile = () => {
         if (!(me && me.id)) { Router.push('/'); }
     }, [me && me.id]);
     
-    if (!me) { return <div>로그인 하라고!!!!</div>; }
+    if (!me) { return <div>로그인 상태가 아닙니다.</div>; }
     
     return (
         <>
