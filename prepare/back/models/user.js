@@ -1,0 +1,31 @@
+module.exports = (sequelize, DataTypes) => {
+    
+    const User = sequelize.define('User', { // Mysql에는 users 테이블 생성
+        // id는 기본적으로 들어 있음
+        email: {
+            // 데이터베이스도 데이터에 대한 검사를 해줍니다.(STRING, TEXT, BOOLEAN, INTEGER, FLOAT, DATETIME)
+            type: DataTypes.STRING(30),
+            allowNull: false, // false: 필수적으로 필요한 데이터, true: 없어도 그만인 데이터
+            unique: true, // 고유한 값(이메일은 다른 사람과 중복되면 안되므로)
+        },
+        
+        nickname: {
+            type: DataTypes.STRING(30), 
+            allowNull: false, 
+        },
+        
+        password: {
+            // 비밀번호는 암호화 과정을 거치면 매우 길어지기 때문에 100으로 설정한 것입니다.
+            type: DataTypes.STRING(100), 
+            allowNull: false, 
+        },
+    
+    }, { // 모델에 대한 셋팅 
+        charset: 'utf8', // mysql에서 한글 에러를 막기 위해서
+        collate: 'utf8_general_ci', // 한글 저장
+    });
+    
+    User.associate = (db) => {};
+    
+    return User;
+}
