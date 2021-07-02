@@ -1,3 +1,5 @@
+const { darkblue } = require("color-name");
+
 module.exports = (sequelize, DataTypes) => {
     
     const Post = sequelize.define('Post', { // Mysql에는 posts 테이블 생성
@@ -12,7 +14,16 @@ module.exports = (sequelize, DataTypes) => {
         collate: 'utf8mb4_general_ci', // 이모티콘 저장
     });
     
-    Post.associate = (db) => {};
+    Post.associate = (db) => {
+        db.Post.belongsTo(db.User);
+        db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
+        db.Post.hasMany(db.Comment);
+        db.Post.hasMany(db.Image);
+        // 리트윗 관계 : 하나의 게시글은 다른 게시글에 속할 수 있다. as 설정을 안하면 컬럼명이 postId로 생성됨
+        db.Post.belongsTo(db.Post, { as: 'Retweet' }); 
+        db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });       // 하나의 게시물은 여러 유저에게 좋아요 받을 수 있음
+    };
     
     return Post;
 }
+// belong to~ = ~에 속하다

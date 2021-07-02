@@ -6,13 +6,21 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
+
+        /* belongsTo는 컬럼을 자동 생성합니다. 
+        UserId: { 이 댓글을 작성한 유저의 아이디 },
+        PostId: { 이 댓글이 작성된 게시글의 아이디 },
+        */
     
-    }, { // 모델에 대한 셋팅 
-        charset: 'utf8mb4', // mysql에서 한글 에러를 막고 이모티콘을 사용할 수 있다.
-        collate: 'utf8mb4_general_ci', // 이모티콘 저장
+    }, { 
+        charset: 'utf8mb4', 
+        collate: 'utf8mb4_general_ci', 
     });
     
-    Comment.associate = (db) => {};
+    Comment.associate = (db) => {
+        db.Comment.belongsTo(db.User); 
+        db.Comment.belongsTo(db.Post);
+    };
     
     return Comment;
 }
