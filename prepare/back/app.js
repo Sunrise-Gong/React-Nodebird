@@ -1,5 +1,7 @@
 const express = require('express');
+const cors = require('cors');
 const postRouter = require('./routes/post');
+const userRouter = require('./routes/user');
 const db = require('./models');
 
 const app = express();
@@ -10,12 +12,31 @@ db.sequelize.sync()
         console.log('db연결 성공');
     })
     .catch(console.error);
+//------------------------------------------
+
+app.use(cors({
+    origin: true,
+    // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
+}));
+
+/*
+프론트에서 보낸 데이터를 
+req.body에 넣어주는 역할을 해서
+다른 라우터보다 상위에 위치해야 합니다.
+미들웨어의 순서의 중요성을 알 수 있는 예시 입니다. */
+
+// 프론트에서 json 형식으로 데이터오면 req.body에 넣어줌
+app.use(express.json());
+// form submit 했을 때 urlencoded 방식으로 데이터가 넘어오는데 그것을 req.body에 넣어줌
+app.use(express.urlencoded({ extended: true })); 
 
 //----------------------------------------
+
 app.use('/post', postRouter);
+app.use('/user', userRouter);
 
 app.listen(3065, () => {
-    console.log('서버 실행중');
+    console.log('서버 실행중!!');
 });
 
 
