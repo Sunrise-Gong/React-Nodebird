@@ -12,28 +12,32 @@ const Signup = () => {
     const dispatch = useDispatch();
     const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
 
-    useEffect(() => { if (signUpDone) { Router.push('/'); } }, [signUpDone]);
+    useEffect(() => { if (signUpDone) { Router.push('/'); } }, [signUpDone]); // 회원가입 완료시 메인페이지로
     
-    useEffect(() => { if (signUpError) { alert(signUpError); } }, [signUpError]);
-
+    useEffect(() => { if (signUpError) { alert(signUpError); } }, [signUpError]); // 회원가입 실패시 alert 창 
+    
+    //---------------------------------------- 커스텀 훅
     const [email, onChangeEmail] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
     const [password, onChangePassword] = useInput('');
-    //----------------------------------------
+    
+    //---------------------------------------- 패스워드 유효성 검사
     const [passwordCheck, setPasswordCheck] = useState('');
     const [passwordError, setPasswordError] = useState(false);
     const onChangePasswordCheck = useCallback((e) => {
         setPasswordCheck(e.target.value);
         setPasswordError(e.target.value !== password);
     }, [password]);
-    //----------------------------------------
+    
+    //---------------------------------------- 동의 체크박스 검사
     const [term, setTerm] = useState('');
     const [termError, setTermError] = useState(false);
     const onChangeTerm = useCallback((e) => {
         setTerm(e.target.checked);
         setTermError(false);
     }, []);
-    //----------------------------------------
+    
+    //---------------------------------------- 회원가입 버튼 클릭시
     const onSubmit = useCallback(() => {
         if (password !== passwordCheck) { return setPasswordError(true); } // 패스워드 재확인
 
