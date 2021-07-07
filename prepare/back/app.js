@@ -28,8 +28,12 @@ app.use(express.json()); // 프론트에서 json 형식으로 데이터오면 re
 app.use(express.urlencoded({ extended: true })); // form submit 했을 때 urlencoded 방식으로 데이터가 넘어오는데 그것을 req.body에 넣어줌
 
 /* 쿠키와 세션에 대한 처리 */
-app.use(cookieParser());
-app.use(session());
+app.use(cookieParser('nodebirdsecret'));
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: 'nodebirdsecret',
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 //----------------------------------------
