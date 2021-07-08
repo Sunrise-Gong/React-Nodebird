@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 // const db = require('../models');
-const { User } = require('../models');
+const { User, Post } = require('../models');
 
 const router = express.Router();
 
@@ -24,7 +24,16 @@ router.post('/login', (req, res, next) => { // req, res, next를 사용하기 �
                 console.error(loginErr);
                 return next(loginErr);
             }
-            return res.status(200).json(user);
+            const fullUserWithoutPassword = await User.findOne({
+                where: { id: user.id },
+                attributes: { exclude: ['password'] },
+                include: [
+                    { model: Post, },
+                    { model: User, as: 'Followings', },
+                    { model: User, as: 'Followers', },
+                ]
+            })
+            return res.status(200).json(fullUserWithoutPassword);
         })
     })(req, res, next);
 }); 
@@ -48,6 +57,13 @@ router.post('/', async (req, res, next) => { // POST /user/
         console.log('회원가입에러', error);
         next(error); // catch와 next를 통해서 에러를 보내면 에러들이 한방에 처리됨
     }
+});
+
+/*------------------------------- 로그아웃 */
+router.post('/user/logout', (req, res, next) => {
+    req.logOut();
+    req.session.destroy();
+    req.send('ok');
 });
 
 module.exports = router;

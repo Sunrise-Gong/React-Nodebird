@@ -1,5 +1,5 @@
 import produce from 'immer';
-import shortid from 'shortid';
+// import shortid from 'shortid';
 
 export const initialState = {
     //------------------------ 팔로우
@@ -32,14 +32,14 @@ export const initialState = {
     logOutData: {},
 };
 
-const dummyUser = (data) => ({
-    ...data,
-    nickname: '해돋이',
-    id: 1,
-    Posts: [{ id: 1 }],
-    Followings: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
-    Followers: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
-});
+// const dummyUser = (data) => ({
+//     ...data,
+//     nickname: '해돋이',
+//     id: 1,
+//     Posts: [{ id: 1 }],
+//     Followings: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
+//     Followers: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
+// });
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -123,7 +123,7 @@ const reducer = (state = initialState, action) => {
             case LOG_IN_SUCCESS:
                 draft.logInLoading = false;
                 draft.logInDone = true;
-                draft.me = dummyUser(action.data);
+                draft.me = action.data;
                 break;
             case LOG_IN_FAILURE:
                 draft.logInLoading = false;
