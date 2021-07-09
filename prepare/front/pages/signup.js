@@ -10,9 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Signup = () => {
     const dispatch = useDispatch();
-    const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
-
-    useEffect(() => { if (signUpDone) { Router.push('/'); } }, [signUpDone]); // 회원가입 완료시 메인페이지로
+    const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+    
+    // Router.replace는 Router.push와 다르게 히스토리가 남지 않습니다.(뒤로가기 해도 이전 페이지 안나옴)
+    useEffect(() => { if (me && me.id) { Router.replace('/'); } }, [me && me.id]); // 로그인시 메인페이지로
+    
+    useEffect(() => { if (signUpDone) { Router.replace('/'); } }, [signUpDone]); // 회원가입 완료시 메인페이지로
     
     useEffect(() => { if (signUpError) { alert(signUpError); } }, [signUpError]); // 회원가입 실패시 alert 창 
     

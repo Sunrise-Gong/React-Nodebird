@@ -1,6 +1,6 @@
-import { all, takeLatest, fork, put, delay } from 'redux-saga/effects';
-import shortId from 'shortid';
-//import axios from 'axios';
+import { all, takeLatest, fork, put, delay, call } from 'redux-saga/effects';
+//import shortId from 'shortid';
+import axios from 'axios';
 
 import {
     LOAD_POSTS_REQUEST, 
@@ -51,25 +51,18 @@ function* watchLoadPosts() {
 }
 
 //-------------------------------------------------- ADD_POST
-// function addPostAPI(data) {
-//     return axios.post('/api/post', data);
-// }
+function addPostAPI(data) { return axios.post('/post', { content: data }); }
 
 function* addPost(action) {
     try {
-        //const result = yield call(addPostAPI, action.data)
-        yield delay(1000);
-        const id = shortId.generate();
+        const result = yield call(addPostAPI, action.data);
         yield put({
             type: ADD_POST_SUCCESS,
-            data: {
-                id,
-                content: action.data,
-            },
+            data: result.data,
         });
         yield put({
             type: ADD_POST_TO_ME,
-            data: id,
+            data: result.data.id,
         });
     } catch (err) {
         yield put({
@@ -113,17 +106,15 @@ function* watchRemovePost() {
 }
 
 //-------------------------------------------------- ADD_COMMENT
- // function addCommentAPI(data) {
-//     return axios.post(`/api/post/${data.postId}/comment`, data);
-// }
+// ex) /POST /post/1/comment -> 게시글 아이디가 유동적인 경우 
+function addCommentAPI(data) { return axios.post(`/post/${data.postId}/comment`, data); } 
 
 function* addComment(action) {
     try {
-        // const result = yield call(addCommentAPI, action.data)
-        yield delay(1000);
+        const result = yield call(addCommentAPI, action.data);
         yield put({
             type: ADD_COMMENT_SUCCESS,
-            data: action.data,
+            data: result.data,
         });
     } catch (err) {
         yield put({

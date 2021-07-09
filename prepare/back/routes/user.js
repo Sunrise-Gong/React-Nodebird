@@ -3,11 +3,12 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 // const db = require('../models');
 const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
 /*------------------------------- 로그인 */
-router.post('/login', (req, res, next) => { // req, res, next를 사용하기 위해서 미들웨어 확장
+router.post('/login', isNotLoggedIn, (req, res, next) => { // req, res, next를 사용하기 위해서 미들웨어 확장
     
     passport.authenticate('local', (err, user, info) => { 
         // 서버 에러인 경우
@@ -15,7 +16,7 @@ router.post('/login', (req, res, next) => { // req, res, next를 사용하기 �
             console.error(err); 
             return next(err);
         }
-        // 클라이언트 에러인 경우(ex: 없는 이메일 입니다) (401: 비인증)
+        // 클라이언트 에러인 경우(ex: 없는 이메일 입니다 or 비밀번호 불일치) (401: 비인증)
         if (info) { return res.status(401).send(info.reason); } 
         
         // 패스포트 로그인(패스포트 자체 최종 검사) 
@@ -39,7 +40,7 @@ router.post('/login', (req, res, next) => { // req, res, next를 사용하기 �
 }); 
 
 /*------------------------------- 회원가입 */
-router.post('/', async (req, res, next) => { // POST /user/
+router.post('/', isNotLoggedIn, async (req, res, next) => { // POST /user/
     try {
         const exUser = await User.findOne({ where: { email: req.body.email, } }); // 동일한 이메일 주소가 db에 있는지 검사
 
@@ -60,10 +61,10 @@ router.post('/', async (req, res, next) => { // POST /user/
 });
 
 /*------------------------------- 로그아웃 */
-router.post('/user/logout', (req, res, next) => {
-    req.logOut();
+router.post('/logout', isLoggedIn, (req, res) => {
+    req.logout();
     req.session.destroy();
-    req.send('ok');
+    res.send('ok');
 });
 
 module.exports = router;
