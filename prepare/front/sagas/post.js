@@ -51,7 +51,9 @@ function* watchLoadPosts() {
 }
 
 //-------------------------------------------------- ADD_POST
-function addPostAPI(data) { return axios.post('/post', { content: data }); }
+function addPostAPI(data) { 
+    return axios.post('/post', { content: data }); 
+}
 
 function* addPost(action) {
     try {
@@ -107,7 +109,9 @@ function* watchRemovePost() {
 
 //-------------------------------------------------- ADD_COMMENT
 // ex) /POST /post/1/comment -> 게시글 아이디가 유동적인 경우 
-function addCommentAPI(data) { return axios.post(`/post/${data.postId}/comment`, data); } 
+function addCommentAPI(data) { 
+    return axios.post(`/post/${data.postId}/comment`, data); 
+} 
 
 function* addComment(action) {
     try {

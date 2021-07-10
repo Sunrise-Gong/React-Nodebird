@@ -2,6 +2,10 @@ import produce from 'immer';
 // import shortid from 'shortid';
 
 export const initialState = {
+    //------------------------ 유저정보 가져오기(새로고침 로그인 풀리는 현상 해결 위해)
+    loadUserLoading: false,
+    loadUserDone: false,
+    loadUserError: null,
     //------------------------ 팔로우
     followLoading: false,
     followDone: false,
@@ -40,6 +44,10 @@ export const initialState = {
 //     Followings: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
 //     Followers: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
 // });
+
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -84,6 +92,21 @@ export const logoutRequestAction = () => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            //-------------------------------------- LOAD_USER
+            case LOAD_USER_REQUEST:
+                draft.loadUserLoading = true;
+                draft.loadUserError = null;
+                draft.loadUserDone = false;
+                break;
+            case LOAD_USER_SUCCESS:
+                draft.loadUserLoading = false;
+                draft.loadUserDone = true;
+                draft.me.loadUserings.unshift({ id: action.data });
+                break;
+            case LOAD_USER_FAILURE:
+                draft.loadUserLoading = false;
+                draft.loadUserError = action.error;
+                break;
             //-------------------------------------- FOLLOW
             case FOLLOW_REQUEST:
                 draft.followLoading = true;

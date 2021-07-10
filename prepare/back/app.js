@@ -24,7 +24,10 @@ db.sequelize.sync()
 //------------------------------------------
 passportConfig();
 
-app.use(cors({ origin: true, })); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
+app.use(cors({ 
+    origin: true,
+    credentials: true,
+})); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
 
 /*프론트에서 보낸 데이터를 req.body에 넣어주는 역할을 해서 다른 라우터보다 상위에 위치해야 합니다. 미들웨어의 순서의 중요성을 알 수 있는 예시 입니다. */
 app.use(express.json()); // 프론트에서 json 형식으로 데이터오면 req.body에 넣어줌

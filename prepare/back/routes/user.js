@@ -7,20 +7,35 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
+router.get('/', (req, res, next) => { // GET /user
+    try {
+        if (req.user) {
+            const user = await User.findOne({ where: { id: req.user.id } });
+            res.status(200).json(user);
+        } else {
+            res.status(200).json(null);
+        }
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+
+});
+
 /*------------------------------- 로그인 */
 router.post('/login', isNotLoggedIn, (req, res, next) => { // req, res, next를 사용하기 위해서 미들웨어 확장
-    
-    passport.authenticate('local', (err, user, info) => { 
+
+    passport.authenticate('local', (err, user, info) => {
         // 서버 에러인 경우
-        if (err) {  
-            console.error(err); 
+        if (err) {
+            console.error(err);
             return next(err);
         }
         // 클라이언트 에러인 경우(ex: 없는 이메일 입니다 or 비밀번호 불일치) (401: 비인증)
-        if (info) { return res.status(401).send(info.reason); } 
-        
+        if (info) { return res.status(401).send(info.reason); }
+
         // 패스포트 로그인(패스포트 자체 최종 검사) 
-        return req.logIn(user, async (loginErr) => { 
+        return req.logIn(user, async (loginErr) => {
             if (loginErr) {
                 console.error(loginErr);
                 return next(loginErr);
@@ -37,7 +52,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => { // req, res, next를 
             return res.status(200).json(fullUserWithoutPassword);
         })
     })(req, res, next);
-}); 
+});
 
 /*------------------------------- 회원가입 */
 router.post('/', isNotLoggedIn, async (req, res, next) => { // POST /user/

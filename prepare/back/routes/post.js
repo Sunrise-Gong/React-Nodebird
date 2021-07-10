@@ -1,18 +1,26 @@
 const express = require('express');
 
-const { Post, Comment } = require('../models');
+const { Post, Comment, Image, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
+// 게시글 등록
 router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
     try {
         const post = await Post.create({ 
             content: req.body.content, 
             UserId: req.user.id, // req.user: passport의 deserializeUser로 생성된 데이터
         });
-        
-        res.status(201).json(post);
+        const fullPost = await Post.findOne({
+            where: { id: post.id },
+            include: [
+                { model: Image },
+                { model: Comment },
+                { model: User },
+            ]
+        })
+        res.status(201).json(fullPost);
     
     } catch(error) {
         console.error(error);
@@ -20,6 +28,7 @@ router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
     }
 });
 
+// 댓글 등록
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST /:postId/comment
     try {
         
