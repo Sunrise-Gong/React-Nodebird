@@ -7,10 +7,19 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => { // GET /user
+/*------------------------------- 새로고침시 유저정보 */
+router.get('/', async (req, res, next) => { // GET /user
     try {
         if (req.user) {
-            const user = await User.findOne({ where: { id: req.user.id } });
+            const user = await User.findOne({ 
+                where: { id: req.user.id },
+                attributes: { exclude: ['password'] },
+                include: [
+                    { model: Post, },
+                    { model: User, as: 'Followings', },
+                    { model: User, as: 'Followers', },
+                ]
+            });
             res.status(200).json(user);
         } else {
             res.status(200).json(null);

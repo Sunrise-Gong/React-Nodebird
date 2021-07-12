@@ -1,6 +1,6 @@
-import shortId from 'shortid';
+// import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker';
+// import faker from 'faker';
 
 export const initialState = {
     mainPosts: [],
@@ -27,28 +27,28 @@ export const initialState = {
 
 //-------------------------------------------- Faker 라이브러리로 더미데이터 생성하기
 
-export const generateDummyPost = (number) => Array(number).fill().map(() => ({
+// export const generateDummyPost = (number) => Array(number).fill().map(() => ({
         
-    id: shortId.generate(),
+//     id: shortId.generate(),
     
-    User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName(),
-    },
+//     User: {
+//         id: shortId.generate(),
+//         nickname: faker.name.findName(),
+//     },
     
-    content: faker.lorem.paragraph(),
+//     content: faker.lorem.paragraph(),
     
-    Images: [{ src: faker.image.image() }],
+//     Images: [{ src: faker.image.image() }],
     
-    Comments: [{
-        User: {
-            id: shortId.generate(),
-            nickname: faker.name.findName(),
-        },
-        content: faker.lorem.sentence(),
-    }],
+//     Comments: [{
+//         User: {
+//             id: shortId.generate(),
+//             nickname: faker.name.findName(),
+//         },
+//         content: faker.lorem.sentence(),
+//     }],
 
-}));
+// }));
 
 // initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 

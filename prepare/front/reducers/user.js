@@ -101,7 +101,7 @@ const reducer = (state = initialState, action) => {
             case LOAD_USER_SUCCESS:
                 draft.loadUserLoading = false;
                 draft.loadUserDone = true;
-                draft.me.loadUserings.unshift({ id: action.data });
+                draft.me = action.data;
                 break;
             case LOAD_USER_FAILURE:
                 draft.loadUserLoading = false;
