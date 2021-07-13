@@ -15,13 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     });
     
     Post.associate = (db) => {
-        db.Post.belongsTo(db.User);
-        db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
-        db.Post.hasMany(db.Comment);
-        db.Post.hasMany(db.Image);
-        // 리트윗 관계 : 하나의 게시글은 다른 게시글에 속할 수 있다. as 설정을 안하면 컬럼명이 postId로 생성됨
-        db.Post.belongsTo(db.Post, { as: 'Retweet' }); 
-        db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });       // 하나의 게시물은 여러 유저에게 좋아요 받을 수 있음
+        db.Post.belongsTo(db.User); // post.addUser, post.getUser, post.setUser
+        db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });// post.addHashtags
+        db.Post.hasMany(db.Comment); // post.addComments, post.getComments
+        db.Post.hasMany(db.Image); // post.addImages, post.getImages
+        db.Post.belongsTo(db.Post, { as: 'Retweet' }); // post.addRetweet
+        db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });// post.addLikers, post.removLikers
     };
     
     return Post;

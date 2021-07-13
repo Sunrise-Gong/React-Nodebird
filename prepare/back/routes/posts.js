@@ -9,13 +9,14 @@ router.get('/', async (req, res, next) => { // GET /posts
         const posts = await Post.findAll({
             limit: 10,
             order: [
-                ['createdAt', 'DESC'], // 게시글에 대한 정렬 설정
-                [Comment, 'createdAt', 'DESC'], // 댓글에 대한 정렬 설정
+                ['createdAt', 'DESC'], // 게시글을 생성일을 기준으로 내림차순 정렬
+                [Comment, 'createdAt', 'DESC'], // 댓글을 생성일을 기준으로 내림차순 정렬
             ],
             include: [
                 { model: User, attributes: ['id', 'nickname'] },
                 { model: Image },
                 { model: Comment, include:[{ model: User, attributes: ['id', 'nickname'] }] },
+                { model: User, as: 'Likers', attributes: ['id'] }, // 좋아요 누른 사람
             ],
         })
 

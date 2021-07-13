@@ -3,6 +3,14 @@ import { all, takeLatest, fork, put, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
+    LIKE_POST_REQUEST, 
+    LIKE_POST_SUCCESS, 
+    LIKE_POST_FAILURE,
+    
+    UNLIKE_POST_REQUEST, 
+    UNLIKE_POST_SUCCESS, 
+    UNLIKE_POST_FAILURE,
+    
     LOAD_POSTS_REQUEST, 
     LOAD_POSTS_SUCCESS, 
     LOAD_POSTS_FAILURE,
@@ -23,6 +31,46 @@ import {
 
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+
+//-------------------------------------------------- LIKE_POST
+function likePostAPI(data) { return axios.patch(`/post/${data}/like`); }
+
+function* likePost(action) {
+    try {
+        const result = yield call(likePostAPI, action.data);
+        yield put({
+            type: LIKE_POST_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: LIKE_POST_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
+
+function* watchLikePost() { yield takeLatest(LIKE_POST_REQUEST, likePost); }
+
+//-------------------------------------------------- UNLIKE_POST
+function unlikePostAPI(data) { return axios.delete(`/post/${data}/like`); }
+
+function* unlikePost(action) {
+    try {
+        const result = yield call(unlikePostAPI, action.data);
+        yield put({
+            type: UNLIKE_POST_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: UNLIKE_POST_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
+
+function* watchUnlikePost() { yield takeLatest(UNLIKE_POST_REQUEST, unlikePost); }
 
 //-------------------------------------------------- LOAD_POST
 function loadPostsAPI() { return axios.get('/posts'); }
@@ -132,6 +180,8 @@ function* watchAddComment() {
 
 export default function* postSaga() {
     yield all([
+        fork(watchLikePost),
+        fork(watchUnlikePost),
         fork(watchAddPost),
         fork(watchLoadPosts),
         fork(watchRemovePost),
