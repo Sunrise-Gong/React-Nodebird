@@ -55,12 +55,14 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST 
 });
 
 // 좋아요
-router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
+router.patch('/:postId/like',isLoggedIn, async (req, res, next) => { // PATCH /post/1/like
     try {
         const post = await Post.findOne({ where: { id: req.params.postId } });
+        
         if (!post) { return res.status(403).send('존재하지 않는 게시물 입니다.') }
         
         await post.addLikers(req.user.id);
+        
         res.json({ PostId: post.id, UserId: req.user.id });
     
     } catch (error) {
@@ -70,12 +72,14 @@ router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
 });
 
 // 좋아요 취소
-router.delete('/:postId/like', async (req, res, next) => { // DELETE /post/1/like
+router.delete('/:postId/like',isLoggedIn , async (req, res, next) => { // DELETE /post/1/like
     try {
         const post = await Post.findOne({ where: { id: req.params.postId } });
+        
         if (!post) { return res.status(403).send('존재하지 않는 게시물 입니다.') }
 
         await post.removeLikers(req.user.id);
+        
         res.json({ PostId: post.id, UserId: req.user.id });
 
     } catch (error) {
@@ -84,8 +88,21 @@ router.delete('/:postId/like', async (req, res, next) => { // DELETE /post/1/lik
     }
 });
 
-router.delete('/', (req, res) => { // DELETE /post
-    res.json({ id: 1 });
+// 게시글 삭제
+router.delete('/:postId',isLoggedIn ,async (req, res, next) => { // DELETE /post/1
+    try{
+        await Post.destroy({
+            where: { 
+                id: req.params.postId,
+                UserId: req.user.id, 
+            }
+        });
+        res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+    
+    } catch(error) {
+        console.error(error);
+        next(error);
+    }
 });
 
 module.exports = router;

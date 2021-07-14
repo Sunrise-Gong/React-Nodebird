@@ -1,4 +1,4 @@
-import { all, fork, delay, put, takeLatest, call } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import { 
@@ -8,7 +8,33 @@ import {
     FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE, 
     UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE, UNFOLLOW_REQUEST,
     LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE,
+    CHANGE_NICKNAME_REQUEST, CHANGE_NICKNAME_SUCCESS, CHANGE_NICKNAME_FAILURE,
 } from '../reducers/user';
+
+//-------------------------------------------------- CHANGE_NICKNAME
+function changeNicknameAPI(data) {
+    return axios.patch('/user/nickname', { nickname: data });
+}
+
+function* changeNickname(action) {
+    try {
+        const result = yield call(changeNicknameAPI, action.data);
+
+        yield put({
+            type: CHANGE_NICKNAME_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: CHANGE_NICKNAME_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function* watchChangeNickname() {
+    yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
 
 //-------------------------------------------------- LOAD_USER
 function loadUserAPI() {
@@ -104,16 +130,14 @@ function* watchSignUp() {
 }
 
 //-------------------------------------------------- FOLLOW
-// function followAPI() {
-//     return axios.post('/api/follow');
-// }
+function followAPI(data) { return axios.patch(`/user/${data}/follow`); }
+
 function* follow(action) {
     try {
-        //const result = yield call(followAPI)
-        yield delay(1000);
+        const result = yield call(followAPI, action.data);
         yield put({
             type: FOLLOW_SUCCESS,
-            data: action.data,
+            data: result.data,
         });
     } catch (err) {
         yield put({
@@ -127,16 +151,14 @@ function* watchFollow() {
 }
 
 //-------------------------------------------------- UNFOLLOW
-// function unfollowAPI() {
-//     return axios.post('/api/unfollow');
-// }
+function unfollowAPI(data) { return axios.delete(`/user/${data}/follow`); }
+
 function* unfollow(action) {
     try {
-        //const result = yield call(unfollowAPI)
-        yield delay(1000);
+        const result = yield call(unfollowAPI, action.data);
         yield put({
             type: UNFOLLOW_SUCCESS,
-            data: action.data, // 현 게시글 작성자 아이디
+            data: result.data, // 현 게시글 작성자 아이디
         });
     } catch (err) {
         yield put({
@@ -152,6 +174,7 @@ function* watchUnfollow() {
 //-------------------------------------------------- userSaga
 export default function* userSaga() {
     yield all([
+        fork(watchChangeNickname),
         fork(watchLoadUser),
         fork(watchLogIn),
         fork(watchLogOut),

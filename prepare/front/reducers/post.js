@@ -188,7 +188,7 @@ const reducer = (state = initialState, action) => {
             case REMOVE_POST_SUCCESS:
                     draft.removePostLoading = false;
                     draft.removePostDone = true;
-                    draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data); // filter 메소드는 원본을 변경하지 않는 immutable한 메소드이다.
+                    draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PostId); // filter 메소드는 원본을 변경하지 않는 immutable한 메소드이다.
                     break;
             case REMOVE_POST_FAILURE:
                     draft.removePostLoading = false;

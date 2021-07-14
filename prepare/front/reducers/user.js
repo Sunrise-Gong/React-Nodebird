@@ -116,7 +116,7 @@ const reducer = (state = initialState, action) => {
             case FOLLOW_SUCCESS:
                 draft.followLoading = false;
                 draft.followDone = true;
-                draft.me.Followings.unshift({ id: action.data });
+                draft.me.Followings.unshift({ id: action.data.UserId });
                 break;
             case FOLLOW_FAILURE:
                 draft.followLoading = false;
@@ -131,7 +131,7 @@ const reducer = (state = initialState, action) => {
             case UNFOLLOW_SUCCESS:
                 draft.logInLoading = false;
                 draft.logInDone = true;
-                draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+                draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.UserId);
                 break;
             case UNFOLLOW_FAILURE:
                 draft.logInLoading = false;
@@ -188,6 +188,7 @@ const reducer = (state = initialState, action) => {
                 draft.changeNicknameError = null;
                 break;
             case CHANGE_NICKNAME_SUCCESS:
+                draft.me.nickname = action.data.nickname;
                 draft.changeNicknameLoading = false;
                 draft.changeNicknameDone = true;
                 break;
