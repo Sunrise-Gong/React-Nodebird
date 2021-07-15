@@ -30,6 +30,19 @@ export const initialState = {
     changeNicknameLoading: false,
     changeNicknameDone: false,
     changeNicknameError: null,
+    //------------------------ 팔로워 목록
+    loadFollowersLoading: false,
+    loadFollowersDone: false,
+    loadFollowersError: null,
+    //------------------------ 팔로잉 목록
+    loadFollowingsLoading: false,
+    loadFollowingsDone: false,
+    loadFollowingsError: null,
+    
+    //------------------------ 팔로워 제거
+    removeFollowerLoading: false,
+    removeFollowerDone: false,
+    removeFollowerError: null,
 
     me: null,
     signUpData: {},
@@ -44,6 +57,17 @@ export const initialState = {
 //     Followings: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
 //     Followers: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
 // });
+export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
+export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
+export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
+
+export const LOAD_FOLLOWINGS_REQUEST = 'LOAD_FOLLOWINGS_REQUEST';
+export const LOAD_FOLLOWINGS_SUCCESS = 'LOAD_FOLLOWINGS_SUCCESS';
+export const LOAD_FOLLOWINGS_FAILURE = 'LOAD_FOLLOWINGS_FAILURE';
+
+export const LOAD_FOLLOWERS_REQUEST = 'LOAD_FOLLOWERS_REQUEST';
+export const LOAD_FOLLOWERS_SUCCESS = 'LOAD_FOLLOWERS_SUCCESS';
+export const LOAD_FOLLOWERS_FAILURE = 'LOAD_FOLLOWERS_FAILURE';
 
 export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
 export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
@@ -92,6 +116,51 @@ export const logoutRequestAction = () => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            //-------------------------------------- REMOVE_FOLLOWER
+            case REMOVE_FOLLOWER_REQUEST:
+                draft.removeFollowerLoading = true;
+                draft.removeFollowerError = null;
+                draft.removeFollowerDone = false;
+                break;
+            case REMOVE_FOLLOWER_SUCCESS:
+                draft.removeFollowerLoading = false;
+                draft.removeFollowerDone = true;
+                draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+                break;
+            case REMOVE_FOLLOWER_FAILURE:
+                draft.removeFollowerLoading = false;
+                draft.removeFollowerError = action.error;
+                break;
+            //-------------------------------------- LOAD_FOLLOWINGS
+            case LOAD_FOLLOWINGS_REQUEST:
+                draft.loadFollowingsLoading = true;
+                draft.loadFollowingsError = null;
+                draft.loadFollowingsDone = false;
+                break;
+            case LOAD_FOLLOWINGS_SUCCESS:
+                draft.loadFollowingsLoading = false;
+                draft.loadFollowingsDone = true;
+                draft.me.Followings = action.data;
+                break;
+            case LOAD_FOLLOWINGS_FAILURE:
+                draft.loadFollowingsLoading = false;
+                draft.loadFollowingsError = action.error;
+                break;
+            //-------------------------------------- LOAD_FOLLOWERS
+            case LOAD_FOLLOWERS_REQUEST:
+                draft.loadFollowersLoading = true;
+                draft.loadFollowersError = null;
+                draft.loadFollowersDone = false;
+                break;
+            case LOAD_FOLLOWERS_SUCCESS:
+                draft.loadFollowersLoading = false;
+                draft.loadFollowersDone = true;
+                draft.me.Followers = action.data;
+                break;
+            case LOAD_FOLLOWERS_FAILURE:
+                draft.loadFollowersLoading = false;
+                draft.loadFollowersError = action.error;
+                break;
             //-------------------------------------- LOAD_USER
             case LOAD_USER_REQUEST:
                 draft.loadUserLoading = true;
