@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost } from '../reducers/post';//액션
+import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';//액션
 import useInput from '../hooks/useInput';
 
 const PostForm = () => {
@@ -9,15 +9,28 @@ const PostForm = () => {
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput('');
 //------------------------------------------------ 작성한 글이 업로드 성공시 인풋창 비우기
-    useEffect(() => { 
-        if (addPostDone) { setText(''); }
-    }, [addPostDone]);
+    
+    useEffect(() => { if (addPostDone) { setText(''); } }, [addPostDone]);
 
 //------------------------------------------------ 이미지 업로드 버튼 클릭
     const imageInput = useRef();
     const onClickImageUpload = useCallback(() => {
         imageInput.current.click();
     }, [imageInput.current]);
+
+//------------------------------------------------ 이미지 업로드 
+    const onChangeImages = useCallback((e) => {
+        console.log('images', e.target.files);
+        
+        const imageFormData = new FormData();
+        // e.target.files 가 유사 배열이여서 call 을 사용함
+        [].forEach.call(e.target.files, (f) => { imageFormData.append('image', f); });
+        
+        dispatch({
+            type: UPLOAD_IMAGES_REQUEST,
+            data: imageFormData,
+        });
+    }, []);
 
 //------------------------------------------------ 게시글 등록버튼 클릭
     const onSubmit = useCallback(() => {
@@ -38,7 +51,7 @@ const PostForm = () => {
                 placeholder="어떤 신기한 일이 있었나요?" />
 {/* --------------------------------------------- 이미지 or 게시글 등록 버튼 */}
             <div style={{ marginBottom: 20 }}>
-                <input type="file" multiple hidden ref={imageInput} />
+                <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>
                 <Button
                     type="primary"

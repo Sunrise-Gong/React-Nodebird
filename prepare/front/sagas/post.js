@@ -26,11 +26,36 @@ import {
     REMOVE_POST_REQUEST,
     REMOVE_POST_SUCCESS,
     REMOVE_POST_FAILURE,
+
+    UPLOAD_IMAGES_REQUEST,
+    UPLOAD_IMAGES_SUCCESS,
+    UPLOAD_IMAGES_FAILURE,
     
     //generateDummyPost,
 
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+
+//-------------------------------------------------- UPLOAD_IMAGES
+// form 데이터는 { images: data } 이렇게 감싸면 json이 되서 문제가 됩니다.
+function uploadImagesAPI(data) { return axios.post('/post/images', data); } 
+
+function* uploadImages(action) {
+    try {
+        const result = yield call(uploadImagesAPI, action.data);
+        yield put({
+            type: UPLOAD_IMAGES_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: UPLOAD_IMAGES_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
+
+function* watchUploadImages() { yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages); }
 
 //-------------------------------------------------- LIKE_POST
 function likePostAPI(data) { return axios.patch(`/post/${data}/like`); }
@@ -178,6 +203,7 @@ function* watchAddComment() {
 
 export default function* postSaga() {
     yield all([
+        fork(watchUploadImages),
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchAddPost),
