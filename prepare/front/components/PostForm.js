@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';//액션
+import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';//액션
 import useInput from '../hooks/useInput';
 
 const PostForm = () => {
@@ -14,29 +14,38 @@ const PostForm = () => {
 
 //------------------------------------------------ 이미지 업로드 버튼 클릭
     const imageInput = useRef();
-    const onClickImageUpload = useCallback(() => {
-        imageInput.current.click();
-    }, [imageInput.current]);
+    
+    const onClickImageUpload = useCallback(() => { imageInput.current.click(); }, [imageInput.current]);
 
 //------------------------------------------------ 이미지 업로드 
     const onChangeImages = useCallback((e) => {
         console.log('images', e.target.files);
         
         const imageFormData = new FormData();
-        // e.target.files 가 유사 배열이여서 call 을 사용함
-        [].forEach.call(e.target.files, (f) => { imageFormData.append('image', f); });
         
-        dispatch({
-            type: UPLOAD_IMAGES_REQUEST,
-            data: imageFormData,
-        });
+        [].forEach.call(e.target.files, (f) => { imageFormData.append('image', f); }); // e.target.files 가 유사 배열이여서 call 을 사용함
+        
+        dispatch({ type: UPLOAD_IMAGES_REQUEST, data: imageFormData });
     }, []);
 
-//------------------------------------------------ 게시글 등록버튼 클릭
+    const onRemoveImage = useCallback((index) => () => {
+        dispatch({
+            type: REMOVE_IMAGE,
+            data: index,
+        });
+    });
+//------------------------------------------------ 게시글/이미지 등록버튼 클릭
     const onSubmit = useCallback(() => {
-        dispatch(addPost(text));
-        // setText(''); 여기서 지워졌는데 에러가 나면 작성한 글이 날아갈 수 있기 때문에 useEffect로..
-    }, [text]);
+        if (!text || !text.trim()) { return alert('게시글을 작성해주세요.'); }
+        
+        const formData = new FormData();
+        
+        imagePaths.forEach((p) => { formData.append('image', p); });
+        
+        formData.append('content', text);
+        
+        return dispatch({ type: ADD_POST_REQUEST, data: formData });
+    }, [text, imagePaths]);
 
     return (
         <Form
@@ -51,7 +60,7 @@ const PostForm = () => {
                 placeholder="어떤 신기한 일이 있었나요?" />
 {/* --------------------------------------------- 이미지 or 게시글 등록 버튼 */}
             <div style={{ marginBottom: 20 }}>
-                <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
+                <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages /* 이미지 선택후 확인을 누르면 실행됨 */} />
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>
                 <Button
                     type="primary"
@@ -62,14 +71,14 @@ const PostForm = () => {
             </div>
 
             <div>
-                {imagePaths.map((v) => { // 이미지 업로드 미리보기 부분
+                {imagePaths.map((v, i) => ( // 이미지 업로드 미리보기 부분
                     <div key={v} style={{ display: 'inline-block' }}>
-                        <img src={v} style={{ width: '200px' }} alt={v} />
+                        <img src={`http://localhost:3065/${v}`} style={{ width: '200px' }} alt={v} />
                         <div>
-                            <Button>제거</Button>
+                            <Button onClick={onRemoveImage(i)}>제거</Button>
                         </div>
-                    </div>;
-                })}
+                    </div>
+                    ))}
             </div>
         </Form>
     );

@@ -121,9 +121,7 @@ function* watchLoadPosts() {
 }
 
 //-------------------------------------------------- ADD_POST
-function addPostAPI(data) { 
-    return axios.post('/post', { content: data }); 
-}
+function addPostAPI(data) { return axios.post('/post', data); }
 
 function* addPost(action) {
     try {

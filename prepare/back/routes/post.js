@@ -14,14 +14,32 @@ try {
     fs.mkdirSync('uploads');
 }
 
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, done) { done(null, 'uploads') },
+        filename(req, file, done) {
+            const ext = path.extname(file.originalname);
+            const basename = path.basename(file.originalname, ext); 
+            done(null, basename + '_' + new Date().getTime() + ext); 
+        }
+    }),
+    limits: { fileSize: 20 * 1024 *1024 },
+})
 
 // 게시글 등록
-router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST /post
     try {
-        const post = await Post.create({
-            content: req.body.content,
-            UserId: req.user.id, // req.user: passport의 deserializeUser로 생성된 데이터
-        });
+        const post = await Post.create({ content: req.body.content, UserId: req.user.id });
+        
+        if (req.body.image) {
+            if (Array.isArray(req.body.image)) { // 이미지가 여러개인 경우 ex) image: [ 해돋이.png, 해넘이.png ]
+                const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })))
+                await post.addImages(images);
+            } else { // 이미지가 하나인 경우 ex) image: 해돋이.png
+                const image = await Image.create({ src: req.body.image });
+                await post.addImages(image);
+            }
+        }
         const fullPost = await Post.findOne({
             where: { id: post.id },
             include: [
@@ -126,17 +144,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /pos
 //     }),
 //     limits: { fileSize: 20 * 1024 *1024 }, // 20MB, 용량제한설정(무분별한 업로드도 공격이 될 수 있음)
 // })
-const upload = multer({
-    storage: multer.diskStorage({
-        destination(req, file, done) { done(null, 'uploads') },
-        filename(req, file, done) {
-            const ext = path.extname(file.originalname);
-            const basename = path.basename(file.originalname, ext); 
-            done(null, basename + new Date().getTime() + ext); 
-        }
-    }),
-    limits: { fileSize: 20 * 1024 *1024 },
-})
+
 // 이미지 업로드
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => { // POST /post/images
     console.log(req.files);
