@@ -13,6 +13,7 @@ router.get('/', async (req, res, next) => { // GET /posts
                 [Comment, 'createdAt', 'DESC'], // 댓글을 생성일을 기준으로 내림차순 정렬
             ],
             include: [
+                { model: Post, as: 'Retweet', include: [{ model: User, attributes: ['id', 'nickname']}, { model: Image}] },
                 { model: User, attributes: ['id', 'nickname'] },
                 { model: Image },
                 { model: Comment, include:[{ model: User, attributes: ['id', 'nickname'] }] },

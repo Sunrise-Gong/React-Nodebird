@@ -10,7 +10,7 @@ import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
 
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPosts 배열'의 요소
     const dispatch = useDispatch();
@@ -19,40 +19,39 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
 
     const id = useSelector((state) => state.user.me?.id); // user 리듀서: 로그인한 유저의 아이디
     const { removePostLoading } = useSelector((state) => state.post); // post 리듀서: 게시글 제거 상태
-    
+
     const liked = post.Likers.find((v) => v.id === id);
-//------------------------------------------------
+
+    // useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]);
+    //------------------------------------------------
     const onLike = useCallback(() => { // 좋아요
-        dispatch({
-            type: LIKE_POST_REQUEST,
-            data: post.id, 
-        });
-    }, []); 
-    
+        if (!id) { return alert('로그인이 필요합니다.'); }
+        return dispatch({ type: LIKE_POST_REQUEST, data: post.id });
+    }, [id]);
+
     const onUnlike = useCallback(() => { // 좋아요 취소
-        dispatch({
-            type: UNLIKE_POST_REQUEST,
-            data: post.id, 
-        });
-    }, []); 
+        if (!id) { return alert('로그인이 필요합니다.'); }
+        return dispatch({ type: UNLIKE_POST_REQUEST, data: post.id });
+    }, [id]);
 
-//------------------------------------------------
     const onToggleComment = useCallback(() => { setCommentFormOpened((prev) => !prev); }, []); // 댓글창 토글 함수
-    
-    const onRemovePost = useCallback(() => { // 게시글 삭제 버튼
-        dispatch({
-            type: REMOVE_POST_REQUEST,
-            data: post.id,
-        });
-    }, []);
 
+    const onRemovePost = useCallback(() => { // 게시글 삭제 버튼
+        if (!id) { return alert('로그인이 필요합니다.'); }
+        return dispatch({ type: REMOVE_POST_REQUEST, data: post.id });
+    }, [id]);
+
+    const onRetweet = useCallback(() => { // 리트윗 버튼
+        if (!id) { return alert('로그인이 필요합니다.'); }
+        return dispatch({ type: RETWEET_REQUEST, data: post.id });
+    }, [id]);
     return (
         <div style={{ marginBottom: 20 }}>
             {/*--------------------------------------------------게시글 이미지, 버튼(리트윗, 좋아요, 댓글, 수정&삭제 or 신고) */}
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[ // 배열에 jsx 를 넣을 때는 항상 키가 필요합니다.
-                    <RetweetOutlined key="retweet" />,
+                    <RetweetOutlined key="retweet" onClick={onRetweet} />,
 
                     liked
                         ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
@@ -74,13 +73,24 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                 ]}
                 extra={id && <FollowButton post={post/* 게시글 작성자의 id를 넘겨주기 위해서 */} />}
             >
-                {/*--------------------------------------------------게시글 본문(해시태그 링크화) */}
-                <Card.Meta
-                    avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-                    title={post.User.nickname}
-                    description={<PostCardContent postData={post.content} />}
-                />
-
+                
+                {post.RetweetId && post.Retweet
+                    ? (
+                        <Card cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
+                            <Card.Meta
+                                avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+                                title={post.Retweet.User.nickname}
+                                description={<PostCardContent postData={post.Retweet.content} />}
+                            />
+                        </Card>
+                    )
+                    : (
+                        <Card.Meta
+                            avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+                            title={post.User.nickname}
+                            description={<PostCardContent postData={post.content} />}
+                        />
+                    )}
             </Card>
             {/*--------------------------------------------------게시글의 댓글창(열고 닫기 구현) */}
             {commentFormOpened && (
@@ -120,6 +130,8 @@ PostCard.propTypes = {
         Comments: PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.object),
         Likers: PropTypes.arrayOf(PropTypes.object),
+        RetweetId: PropTypes.number,
+        Retweet: PropTypes.objectOf(PropTypes.any),
     }).isRequired,
 };
 

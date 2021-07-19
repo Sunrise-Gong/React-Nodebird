@@ -35,6 +35,10 @@ export const initialState = {
         uploadImagesLoading: false,
         uploadImagesDone: false,
         uploadImagesError: null,
+        
+        retweetLoading: false,
+        retweetDone: false,
+        retweetError: null,
 };
 
 //-------------------------------------------- Faker 라이브러리로 더미데이터 생성하기
@@ -79,6 +83,10 @@ export const initialState = {
 //  
 
 //-------------------------------------------- 액션
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
@@ -126,6 +134,22 @@ const reducer = (state = initialState, action) => {
                         //-------------------------------------- REMOVE_IMAGE
                         case REMOVE_IMAGE:
                                 draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+                                break;
+                        //-------------------------------------- RETWEET
+                        case RETWEET_REQUEST:
+                                draft.retweetLoading = true;
+                                draft.retweetDone = false;
+                                draft.retweetError = null;
+                                break;
+                        case RETWEET_SUCCESS: {
+                                draft.retweetLoading = false;
+                                draft.retweetDone = true;
+                                draft.mainPosts.unshift(action.data);
+                                break;
+                        }
+                        case RETWEET_FAILURE:
+                                draft.retweetLoading = false;
+                                draft.retweetError = action.error;
                                 break;
                         //-------------------------------------- UPLOAD_IMAGES
                         case UPLOAD_IMAGES_REQUEST:
