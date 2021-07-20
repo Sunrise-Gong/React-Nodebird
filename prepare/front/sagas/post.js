@@ -122,11 +122,11 @@ function* unlikePost(action) {
 function* watchUnlikePost() { yield takeLatest(UNLIKE_POST_REQUEST, unlikePost); }
 
 //-------------------------------------------------- LOAD_POST
-function loadPostsAPI() { return axios.get('/posts'); }
+function loadPostsAPI(lastId) { return axios.get(`/posts?lastId=${lastId || 0}`); }
 
-function* loadPosts() {
+function* loadPosts(action) {
     try {
-        const result = yield call(loadPostsAPI);
+        const result = yield call(loadPostsAPI, action.lastId);
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: result.data,

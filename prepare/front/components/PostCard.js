@@ -22,7 +22,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
 
     const liked = post.Likers.find((v) => v.id === id);
 
-    // useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]);
+    // useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]); // 포스트 카드 개수만큼 리렌더링 발생 index.js에서 실행해야 합니다.
     //------------------------------------------------
     const onLike = useCallback(() => { // 좋아요
         if (!id) { return alert('로그인이 필요합니다.'); }
@@ -71,9 +71,10 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                         <EllipsisOutlined />
                     </Popover>,
                 ]}
+                title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
                 extra={id && <FollowButton post={post/* 게시글 작성자의 id를 넘겨주기 위해서 */} />}
             >
-                
+                {/*-------------------------------------------------- 게시글 본문  */}
                 {post.RetweetId && post.Retweet
                     ? (
                         <Card cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
