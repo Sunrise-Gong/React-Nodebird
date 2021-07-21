@@ -2,6 +2,10 @@ import produce from 'immer';
 // import shortid from 'shortid';
 
 export const initialState = {
+    //------------------------ 내 정보 가져오기
+    loadMyInfoLoading: false,
+    loadMyInfoDone: false,
+    loadMyInfoError: null,
     //------------------------ 유저정보 가져오기(새로고침 로그인 풀리는 현상 해결 위해)
     loadUserLoading: false,
     loadUserDone: false,
@@ -45,8 +49,9 @@ export const initialState = {
     removeFollowerError: null,
 
     me: null,
-    signUpData: {},
-    logOutData: {},
+    userInfo: null,
+    // signUpData: {},
+    // logOutData: {},
 };
 
 // const dummyUser = (data) => ({
@@ -57,6 +62,10 @@ export const initialState = {
 //     Followings: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
 //     Followers: [{ id: shortid.generate(), nickname: '재원이' }, { id: shortid.generate(), nickname: '선범이' }, { id: shortid.generate(), nickname: '나연' }],
 // });
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
 export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
 export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
 export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
@@ -116,6 +125,21 @@ export const logoutRequestAction = () => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            //-------------------------------------- LOAD_MY_INFO
+            case LOAD_MY_INFO_REQUEST:
+                draft.loadMyInfoLoading = true;
+                draft.loadMyInfoError = null;
+                draft.loadMyInfoDone = false;
+                break;
+            case LOAD_MY_INFO_SUCCESS:
+                draft.loadMyInfoLoading = false;
+                draft.loadMyInfoDone = true;
+                draft.me = action.data;
+                break;
+            case LOAD_MY_INFO_FAILURE:
+                draft.loadMyInfoLoading = false;
+                draft.loadMyInfoError = action.error;
+                break;
             //-------------------------------------- REMOVE_FOLLOWER
             case REMOVE_FOLLOWER_REQUEST:
                 draft.removeFollowerLoading = true;
@@ -170,7 +194,7 @@ const reducer = (state = initialState, action) => {
             case LOAD_USER_SUCCESS:
                 draft.loadUserLoading = false;
                 draft.loadUserDone = true;
-                draft.me = action.data;
+                draft.userInfo = action.data;
                 break;
             case LOAD_USER_FAILURE:
                 draft.loadUserLoading = false;

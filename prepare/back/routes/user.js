@@ -9,6 +9,7 @@ const router = express.Router();
 
 /*------------------------------- 새로고침시 유저정보 */
 router.get('/', async (req, res, next) => { // GET /user
+    console.log(req.headers);
     try {
         if (req.user) {
             const user = await User.findOne({

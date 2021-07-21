@@ -12,6 +12,7 @@ import {
     LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILURE,
     LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILURE,
     REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILURE,
+    LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE,
 } from '../reducers/user';
 
 //-------------------------------------------------- REMOVE_FOLLOWER
@@ -108,13 +109,35 @@ function* watchChangeNickname() {
     yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
 
-//-------------------------------------------------- LOAD_USER
-function loadUserAPI() {
-    return axios.get('/user');
-}
-function* loadUser() {
+//-------------------------------------------------- LOAD_MY_INFO
+function loadMyInfoAPI() { return axios.get('/user'); }
+
+function* loadMyInfo() {
     try {
-        const result = yield call(loadUserAPI);
+        const result = yield call(loadMyInfoAPI);
+
+        yield put({
+            type: LOAD_MY_INFO_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: LOAD_MY_INFO_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function* watchLoadMyInfo() {
+    yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
+//-------------------------------------------------- LOAD_USER
+function loadUserAPI(data) { return axios.get(`/user/${data}`); }
+
+function* loadUser(action) {
+    try {
+        const result = yield call(loadUserAPI, action.data);
 
         yield put({
             type: LOAD_USER_SUCCESS,
@@ -251,6 +274,7 @@ export default function* userSaga() {
         fork(watchLoadFollowings),
         fork(watchChangeNickname),
         fork(watchLoadUser),
+        fork(watchLoadMyInfo),
         fork(watchLogIn),
         fork(watchLogOut),
         fork(watchSignUp),
