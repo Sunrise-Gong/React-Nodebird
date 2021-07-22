@@ -49,15 +49,21 @@ const Home = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+    console.log('getServerSideProps 시작');
+    console.log('헤더', context.req.headers);
+    
     const cookie = context.req ? context.req.headers.cookie : '';
     
     axios.defaults.headers.Cookie = '';
-    
     if (context.req && cookie) { axios.defaults.headers.Cookie = cookie; }
     
     context.store.dispatch({ type: LOAD_POSTS_REQUEST });
+    
     context.store.dispatch({ type: LOAD_MY_INFO_REQUEST }); 
+    
     context.store.dispatch(END);
+    console.log('getServerSideProps 끝');
+
     await context.store.sagaTask.toPromise();
 });
 

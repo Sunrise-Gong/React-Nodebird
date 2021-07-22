@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, put, delay, call } from 'redux-saga/effects';
+import { all, takeLatest, fork, put, delay, call, throttle } from 'redux-saga/effects';
 //import shortId from 'shortid';
 import axios from 'axios';
 
@@ -11,9 +11,13 @@ import {
     UNLIKE_POST_SUCCESS, 
     UNLIKE_POST_FAILURE,
     
-    LOAD_POSTS_REQUEST, 
+    LOAD_POSTS_REQUEST,
     LOAD_POSTS_SUCCESS, 
     LOAD_POSTS_FAILURE,
+    
+    LOAD_POST_REQUEST,
+    LOAD_POST_SUCCESS, 
+    LOAD_POST_FAILURE,
     
     ADD_POST_REQUEST, 
     ADD_POST_SUCCESS, 
@@ -122,6 +126,27 @@ function* unlikePost(action) {
 function* watchUnlikePost() { yield takeLatest(UNLIKE_POST_REQUEST, unlikePost); }
 
 //-------------------------------------------------- LOAD_POST
+function loadPostAPI(data) { return axios.get(`/post/${data}`); }
+
+function* loadPost(action) {
+    try {
+        const result = yield call(loadPostAPI, action.data);
+
+        yield put({ 
+            type: LOAD_POST_SUCCESS, 
+            data: result.data, 
+        });
+    } catch (err) {
+        yield put({ 
+            type: LOAD_POST_FAILURE, 
+            error: err.response.data, 
+        });
+    }
+}
+
+function* watchLoadPost() { yield takeLatest(LOAD_POST_REQUEST, loadPost); }
+
+//-------------------------------------------------- LOAD_POSTS
 function loadPostsAPI(lastId) { return axios.get(`/posts?lastId=${lastId || 0}`); }
 
 function* loadPosts(action) {
@@ -140,8 +165,8 @@ function* loadPosts(action) {
 }
 
 function* watchLoadPosts() {
-    //yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
-    yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
+    yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+    // yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
 
 //-------------------------------------------------- ADD_POST
@@ -230,6 +255,7 @@ export default function* postSaga() {
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchAddPost),
+        fork(watchLoadPost),
         fork(watchLoadPosts),
         fork(watchRemovePost),
         fork(watchAddComment),

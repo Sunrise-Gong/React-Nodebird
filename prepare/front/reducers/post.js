@@ -4,8 +4,9 @@ import produce from 'immer';
 
 export const initialState = {
         mainPosts: [],
+        singlePost: null,
         imagePaths: [], // 이미지 업로드시 경로 저장
-
+        
         hasMorePosts: true,
 
         likePostLoading: false,
@@ -16,6 +17,10 @@ export const initialState = {
         unlikePostDone: false,
         unlikePostError: null,
 
+        loadPostLoading: false,
+        loadPostDone: false,
+        loadPostError: null,
+        
         loadPostsLoading: false,
         loadPostsDone: false,
         loadPostsError: null,
@@ -83,6 +88,10 @@ export const initialState = {
 //  
 
 //-------------------------------------------- 액션
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
+
 export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
 export const RETWEET_FAILURE = 'RETWEET_FAILURE';
@@ -200,6 +209,21 @@ const reducer = (state = initialState, action) => {
                         case UNLIKE_POST_FAILURE:
                                 draft.unlikePostLoading = false;
                                 draft.unlikePostError = action.error;
+                                break;
+                        //-------------------------------------- LOAD_POST
+                        case LOAD_POST_REQUEST:
+                                draft.loadPostLoading = true;
+                                draft.loadPostDone = false;
+                                draft.loadPostError = null;
+                                break;
+                        case LOAD_POST_SUCCESS:
+                                draft.loadPostLoading = false;
+                                draft.loadPostDone = true;
+                                draft.singlePost = action.data;
+                                break;
+                        case LOAD_POST_FAILURE:
+                                draft.loadPostLoading = false;
+                                draft.loadPostError = action.error;
                                 break;
                         //-------------------------------------- LOAD_POSTS
                         case LOAD_POSTS_REQUEST:
