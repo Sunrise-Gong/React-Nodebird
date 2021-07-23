@@ -20,7 +20,7 @@ const Post = () => {
     return (
         <AppLayout>
             <Head>
-                <title>{singlePost.User.nickname}</title>
+                <title>{singlePost.User.nickname}님의 글</title>
                 <meta name="description" content={singlePost.content} />
                 <meta property="og:title" content={`${singlePost.User.nickname}님의 게시글`} />
                 <meta property="og:description" content={singlePost.content} />
