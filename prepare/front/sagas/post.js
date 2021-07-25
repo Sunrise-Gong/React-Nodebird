@@ -15,6 +15,14 @@ import {
     LOAD_POSTS_SUCCESS, 
     LOAD_POSTS_FAILURE,
     
+    LOAD_USER_POSTS_REQUEST,
+    LOAD_USER_POSTS_SUCCESS, 
+    LOAD_USER_POSTS_FAILURE,
+
+    LOAD_HASHTAG_POSTS_REQUEST,
+    LOAD_HASHTAG_POSTS_SUCCESS, 
+    LOAD_HASHTAG_POSTS_FAILURE,
+    
     LOAD_POST_REQUEST,
     LOAD_POST_SUCCESS, 
     LOAD_POST_FAILURE,
@@ -55,6 +63,7 @@ function* retweet(action) {
             data: result.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: RETWEET_FAILURE,
             error: err.response.data,
@@ -76,6 +85,7 @@ function* uploadImages(action) {
             data: result.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: UPLOAD_IMAGES_FAILURE,
             error: err.response.data,
@@ -96,6 +106,7 @@ function* likePost(action) {
             data: result.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: LIKE_POST_FAILURE,
             error: err.response.data,
@@ -116,6 +127,7 @@ function* unlikePost(action) {
             data: result.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: UNLIKE_POST_FAILURE,
             error: err.response.data,
@@ -137,6 +149,7 @@ function* loadPost(action) {
             data: result.data, 
         });
     } catch (err) {
+        console.error(err);
         yield put({ 
             type: LOAD_POST_FAILURE, 
             error: err.response.data, 
@@ -146,7 +159,53 @@ function* loadPost(action) {
 
 function* watchLoadPost() { yield takeLatest(LOAD_POST_REQUEST, loadPost); }
 
-//-------------------------------------------------- LOAD_POSTS
+//-------------------------------------------------- LOAD_USER_POSTS (특정 유저의 게시글들)
+function loadUserPostsAPI(data, lastId) { return axios.get(`/user/${data}/posts?lastId=${lastId || 0}`); }
+
+function* loadUserPosts(action) {
+    try {
+        const result = yield call(loadUserPostsAPI, action.data, action.lastId);
+        yield put({
+            type: LOAD_USER_POSTS_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: LOAD_USER_POSTS_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function* watchLoadUserPosts() {
+    yield throttle(5000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
+}
+
+//-------------------------------------------------- LOAD_HASHTAG_POSTS (특정 해시태그의 게시글들)
+function loadHashtagPostsAPI(data, lastId) { return axios.get(`/hashtag/${data}?lastId=${lastId || 0}`); }
+
+function* loadHashtagPosts(action) {
+    try {
+        const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
+        yield put({
+            type: LOAD_HASHTAG_POSTS_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: LOAD_HASHTAG_POSTS_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function* watchLoadHashtagPosts() {
+    yield throttle(5000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+}
+
+//-------------------------------------------------- LOAD_POSTS (게시글들)
 function loadPostsAPI(lastId) { return axios.get(`/posts?lastId=${lastId || 0}`); }
 
 function* loadPosts(action) {
@@ -157,6 +216,7 @@ function* loadPosts(action) {
             data: result.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: LOAD_POSTS_FAILURE,
             error: err.response.data,
@@ -184,6 +244,7 @@ function* addPost(action) {
             data: result.data.id,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: ADD_POST_FAILURE,
             error: err.response.data,
@@ -211,6 +272,7 @@ function* removePost(action) {
             data: result.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: REMOVE_POST_FAILURE,
             error: err.response.data,
@@ -257,6 +319,8 @@ export default function* postSaga() {
         fork(watchAddPost),
         fork(watchLoadPost),
         fork(watchLoadPosts),
+        fork(watchLoadUserPosts),
+        fork(watchLoadHashtagPosts),
         fork(watchRemovePost),
         fork(watchAddComment),
     ]);
