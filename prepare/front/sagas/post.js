@@ -183,7 +183,9 @@ function* watchLoadUserPosts() {
 }
 
 //-------------------------------------------------- LOAD_HASHTAG_POSTS (특정 해시태그의 게시글들)
-function loadHashtagPostsAPI(data, lastId) { return axios.get(`/hashtag/${data}?lastId=${lastId || 0}`); }
+function loadHashtagPostsAPI(data, lastId) { 
+    return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`); 
+}
 
 function* loadHashtagPosts(action) {
     try {

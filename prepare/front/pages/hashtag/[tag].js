@@ -17,7 +17,7 @@ const Hashtag = () => {
     const { tag } = router.query;
     const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
 
-    useEffect(() => {
+    useEffect(() => { // 인피니티 스크롤
         const onScroll = () => {
             if (window.pageYOffset
                 + document.documentElement.clientHeight

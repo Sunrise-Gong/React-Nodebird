@@ -18,7 +18,7 @@ router.get('/:hashtag', async (req, res, next) => { // GET /hashtag/노드?lastI
                 [Comment, 'createdAt', 'DESC'],
             ],
             include: [
-                { model: Hashtag, where: { name: req.params.hashtag } }, // 조건을 include에 적을 수도 있음
+                { model: Hashtag, where: { name: decodeURIComponent(req.params.hashtag) } }, // 조건을 include에 적을 수도 있음
                 { model: Post, as: 'Retweet', include: [{ model: User, attributes: ['id', 'nickname']}, { model: Image}] },
                 { model: User, attributes: ['id', 'nickname'] },
                 { model: Image },
