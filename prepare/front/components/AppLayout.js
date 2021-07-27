@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import Router from 'next/router';
 import { Input, Menu, Row, Col } from 'antd';
 
 import { useSelector } from 'react-redux';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
+import useInput from '../hooks/useInput';
 
-// import styled from 'styled-components';
+//import styled from 'styled-components';
 
-// const SearchInput = styled(Input.Search)`
-// vertical-align: middle;
-// `;
+const SearchInput = styled(Input.Search)`
+vertical-align: middle;
+`;
 
 const Global = createGlobalStyle`
 .ant-row {
@@ -30,7 +32,13 @@ const Global = createGlobalStyle`
 
 const AppLayout = ({ children }) => {
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [searchInput, onChangeSearchInput] = useInput('');
+    
     const { me } = useSelector((state) => state.user);
+    
+    // import Router from 'next/router';
+    const onSearch = useCallback(() => { Router.push(`/hashtag/${searchInput}`); }, [searchInput]);
+    
     return (
         <div>
             <Global />
@@ -42,7 +50,12 @@ const AppLayout = ({ children }) => {
                     <Link href="/profile"><a>프로필</a></Link>
                 </Menu.Item>
                 <Menu.Item>
-                    <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
+                    <SearchInput 
+                    enterButton 
+                    value={searchInput}
+                    onChange={onChangeSearchInput}
+                    onSearch={onSearch}
+                    />
                 </Menu.Item>
                 <Menu.Item>
                     <Link href="/signup"><a>회원가입</a></Link>

@@ -6,11 +6,12 @@ import PropTypes from 'prop-types';
 const PostCardContent = ({ postData }) => ( // postData = '안녕하세요 트위터 짝퉁 궁금해서 가입해봤습니다~ #해시태그 #익스프레스'
     <div>
         {postData
-            
+
             .split(/(#[^\s#]+)/g) // ["안녕하세요 트위터 짝퉁 궁금해서 가입해봤습니다~ ", "#해시태그", " ", "#익스프레스", ""]
             
             .map((v, i) => {
                 if (v.match(/(#[^\s#]+)/)) {
+                    // import Link from 'next/link'; //
                     return <Link href={`/hashtag/${v.slice(1)}`} key={i}><a>{v}</a></Link>;
                 }
 

@@ -11,10 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "@next/bundle-analyzer": "^11.0.1",
     "antd": "^4.16.0",
     "axios": "^0.21.1",
     "faker": "^5.5.3",
     "immer": "^9.0.3",
+    "moment": "^2.29.1",
     "next": "^9.5.5",
     "next-redux-wrapper": "^6.0.2",
     "prop-types": "^15.7.2",
