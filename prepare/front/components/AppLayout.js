@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { Input, Menu, Row, Col } from 'antd';
 
 import { useSelector } from 'react-redux';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
@@ -17,18 +17,18 @@ const SearchInput = styled(Input.Search)`
 vertical-align: middle;
 `;
 
-const Global = createGlobalStyle`
-.ant-row {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-}
-.ant-col:first-child {
-    padding-left: 0 !important;
-}
-.ant-col:last-child {
-    padding-right: 0 !important;
-}
-`;
+// const Global = createGlobalStyle`
+// .ant-row {
+//     margin-right: 0 !important;
+//     margin-left: 0 !important;
+// }
+// .ant-col:first-child {
+//     padding-left: 0 !important;
+// }
+// .ant-col:last-child {
+//     padding-right: 0 !important;
+// }
+// `;
 
 const AppLayout = ({ children }) => {
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,7 +41,7 @@ const AppLayout = ({ children }) => {
     
     return (
         <div>
-            <Global />
+            {/*<Global />*/}
             <Menu mode="horizontal">
                 <Menu.Item>
                     <Link href="/"><a>노드버드</a></Link>

@@ -1,10 +1,10 @@
+//------------------------------------- model 최신화 코드
 const Sequelize = require('sequelize');
 const comment = require('./comment');
 const hashtag = require('./hashtag');
 const image = require('./image');
 const post = require('./post');
 const user = require('./user');
-
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env]; // config.json 의 development 속성 입니다.
@@ -20,11 +20,11 @@ db.Image = image;
 db.Post = post;
 db.User = user;
 
-Object.keys(db).forEach(modelName => { db[modelName].init(sequelize); }) // class 방식에서는 이부분 추가
+// class 방식에서는 이부분 추가
+Object.keys(db).forEach(modelName => { db[modelName].init(sequelize); }) 
 
-Object.keys(db).forEach(modelName => { // 테이블의 관계설정을 실행시켜주는 부분 
-  if (db[modelName].associate) { db[modelName].associate(db); }
-});
+// 테이블의 관계설정을 실행시켜주는 부분 
+Object.keys(db).forEach(modelName => { if (db[modelName].associate) { db[modelName].associate(db); } });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
