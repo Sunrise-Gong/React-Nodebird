@@ -55,8 +55,10 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
         <div style={{ marginBottom: 20 }}>
             {/*--------------------------------------------------게시글 이미지, 버튼(리트윗, 좋아요, 댓글, 수정&삭제 or 신고) */}
             <Card
+                style={{ background: '#D3E0EE', borderRadius: '8px 8px 0px 0px' }}
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[ // 배열에 jsx 를 넣을 때는 항상 키가 필요합니다.
+                    
                     <RetweetOutlined key="retweet" onClick={onRetweet} />,
 
                     liked
@@ -83,7 +85,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                 {/*-------------------------------------------------- 게시글 본문 */}
                 {post.RetweetId && post.Retweet
                     ? (
-                        <Card cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
+                        <Card style={{ borderRadius: 8 }} cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
                             <div style={{ float: 'right' }}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
                             <Card.Meta
                                 avatar={(

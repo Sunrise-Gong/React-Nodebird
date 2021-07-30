@@ -16,10 +16,10 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
 
     return (
         <List
-            style={{ marginBottom: 10 }}
+            style={{ marginBottom: 10, borderRadius: 8 }}
             grid={{ gutter: 4, xs: 2, md: 3 }}
             size="small"
-            header={<div>{header}</div>}
+            header={<div style={{ color: '#F4F6F8', textAlign: 'center', fontSize: 17 }}>{header}</div>}
             loadMore={(
                 <div style={{ textAlign: 'center', margin: '10px 0' }}>
                     <Button onClick={onClickMore} loading={loading}>더 보기</Button>

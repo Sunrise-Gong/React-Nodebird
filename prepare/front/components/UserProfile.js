@@ -17,11 +17,13 @@ const UserProfile = () => {
     }, []);
     //-----------------------------------------
     return (
-        <Card actions={[
-            <div key="twit"><Link href={`/user/${me.id}`}><a>짹짹<br />{me.Posts.length}</a></Link></div>,
-            <div key="followings"><Link href="profile"><a>팔로잉<br />{me.Followings.length}</a></Link></div>,
-            <div key="followers"><Link href="profile"><a>팔로워<br />{me.Followers.length}</a></Link></div>,
-        ]}
+        <Card
+            style={{ borderRadius: '8px 8px 0px 0px' }}
+            actions={[
+                <div key="twit"><Link href={`/user/${me.id}`}><a>짹짹<br />{me.Posts.length}</a></Link></div>,
+                <div key="followings"><Link href="profile"><a>팔로잉<br />{me.Followings.length}</a></Link></div>,
+                <div key="followers"><Link href="profile"><a>팔로워<br />{me.Followers.length}</a></Link></div>,
+            ]}
         >
             <Card.Meta
                 avatar={(

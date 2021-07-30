@@ -40,9 +40,9 @@ const AppLayout = ({ children }) => {
     const onSearch = useCallback(() => { Router.push(`/hashtag/${searchInput}`); }, [searchInput]);
     
     return (
-        <div>
+        <div style={{ background: '#011627' }}>
             {/*<Global />*/}
-            <Menu mode="horizontal">
+            <Menu mode="horizontal" theme="dark">
                 <Menu.Item>
                     <Link href="/"><a>노드버드</a></Link>
                 </Menu.Item>
@@ -50,7 +50,7 @@ const AppLayout = ({ children }) => {
                     <Link href="/profile"><a>프로필</a></Link>
                 </Menu.Item>
                 <Menu.Item>
-                    <SearchInput 
+                    <SearchInput
                     enterButton 
                     value={searchInput}
                     onChange={onChangeSearchInput}
@@ -70,7 +70,7 @@ const AppLayout = ({ children }) => {
                     <a
                         href="https://www.slowtv24.com"
                         target="_blank"
-                        rel="noreferrer noopener">Made by RSC
+                        rel="noreferrer noopener">Copy by 해돋이
                     </a>
                 </Col>
             </Row>

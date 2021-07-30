@@ -30,7 +30,7 @@ const LoginForm = () => {
     return (
         <Form style={{ padding: 10 }} onFinish={onSubmitForm}>
             <div>
-                <label htmlFor="user-email">이메일</label>
+                <label style={{ color: '#F4F6F8' }} htmlFor="user-email">Email</label>
                 <br />
                 <Input 
                 name="user-email" 
@@ -40,7 +40,7 @@ const LoginForm = () => {
                 required />
             </div>
             <div>
-            <label htmlFor="user-password">비밀번호</label>
+            <label style={{ color: '#F4F6F8' }} htmlFor="user-password">Password</label>
                 <br />
                 <Input 
                 name="user-password" 
@@ -53,9 +53,9 @@ const LoginForm = () => {
                 <Button 
                 type="primary" 
                 htmlType="submit" 
-                loading={logInLoading}>로그인
+                loading={logInLoading}>Login
                 </Button>
-                <Link href="/signup"><a>회원가입</a></Link>
+                <Link href="/signup"><a style={{ marginLeft: 10, fontSize: 17, float: 'right' }}>회원이 아니신가요?</a></Link>
             </div>
         </Form>
     );

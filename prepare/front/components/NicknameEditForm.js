@@ -9,6 +9,7 @@ const NicknameEditForm = () => {
         marginBottom: '20px',
         border: '1px solid #d9d9d9',
         padding: '20px',
+        borderRadius: 8,
     }), []);
     const { me } = useSelector((state) => state.user);
     const [nickname, onChangeNickname] = useInput(me?.nickname || '');
@@ -23,7 +24,7 @@ const NicknameEditForm = () => {
             <Input.Search 
             value={nickname}
             onChange={onChangeNickname}
-            addonBefore="닉네임" 
+            addonBefore="변경할 닉네임" 
             enterButton="수정" 
             onSearch={onSubmit}
             />

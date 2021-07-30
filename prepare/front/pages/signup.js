@@ -62,7 +62,7 @@ const Signup = () => {
             </Head>
             <Form onFinish={onSubmit}>
                 <div>
-                    <label htmlFor="user-email">이메일</label>
+                    <label style={{ color: '#F4F6F8' }} htmlFor="user-email">이메일</label>
                     <br />
                     <Input
                         name="user-email"
@@ -72,7 +72,7 @@ const Signup = () => {
                         onChange={onChangeEmail} />
                 </div>
                 <div>
-                    <label htmlFor="user-nick">닉네임</label>
+                    <label style={{ color: '#F4F6F8' }} htmlFor="user-nick">닉네임</label>
                     <br />
                     <Input
                         name="user-nick"
@@ -81,7 +81,7 @@ const Signup = () => {
                         onChange={onChangeNickname} />
                 </div>
                 <div>
-                    <label htmlFor="user-password">비밀번호</label>
+                    <label style={{ color: '#F4F6F8' }} htmlFor="user-password">비밀번호</label>
                     <br />
                     <Input
                         name="user-password"
@@ -91,7 +91,7 @@ const Signup = () => {
                         onChange={onChangePassword} />
                 </div>
                 <div>
-                    <label htmlFor="user-password-check">비밀번호체크</label>
+                    <label style={{ color: '#F4F6F8' }} htmlFor="user-password-check">비밀번호체크</label>
                     <br />
                     <Input
                         name="user-password-check"
@@ -104,6 +104,7 @@ const Signup = () => {
                 </div>
                 <div>
                     <Checkbox
+                        style={{ color: '#F4F6F8' }}
                         name="user-term"
                         checked={term}
                         onChange={onChangeTerm}
