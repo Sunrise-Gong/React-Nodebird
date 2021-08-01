@@ -1,4 +1,4 @@
-// hashtag/[tag].js 
+// ex) http://localhost:3000/hashtag/노드 -> 특정 해시태그의 글을 모두 가져오는 다이나믹 라우팅
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,12 +19,13 @@ const Hashtag = () => {
 
     useEffect(() => { // 인피니티 스크롤
         const onScroll = () => {
-            if (window.pageYOffset
-                + document.documentElement.clientHeight
+            if (window.pageYOffset + document.documentElement.clientHeight
                 > document.documentElement.scrollHeight - 300) {
                 if (hasMorePosts && !loadPostsLoading) {
                     dispatch({
-                        type: LOAD_HASHTAG_POSTS_REQUEST, lastId: mainPosts[mainPosts.length - 1]?.id, data: tag,
+                        type: LOAD_HASHTAG_POSTS_REQUEST,
+                        lastId: mainPosts[mainPosts.length - 1]?.id,
+                        data: tag,
                     });
                 }
             }
@@ -43,11 +44,11 @@ const Hashtag = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-    console.log('context 쿠키생성전', context);
+    // console.log('context 쿠키생성전', context);
     const cookie = context.req ? context.req.headers.cookie : '';
-    console.log('context 쿠키생성후', context);
+    // console.log('context 쿠키생성후', context);
     axios.defaults.headers.Cookie = '';
-    
+
     if (context.req && cookie) { axios.defaults.headers.Cookie = cookie; }
 
     context.store.dispatch({ type: LOAD_HASHTAG_POSTS_REQUEST, data: context.params.tag });

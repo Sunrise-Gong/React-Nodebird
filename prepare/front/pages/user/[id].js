@@ -1,4 +1,4 @@
-// 특정 사용자의 게시글을 모두 가져오는
+// ex) http://localhost:3000/user/5 -> 특정 사용자의 게시글을 모두 가져오는 다이나믹 라우팅
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Head from 'next/head';

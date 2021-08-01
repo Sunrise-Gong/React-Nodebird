@@ -1,4 +1,4 @@
-// post/[id].js -> 특정 게시글 하나만 나타내는 페이지 (링크 타고 들어오거나 할 경우)
+// http://localhost:3000/post/1 -> 특정 게시글 하나만 나타내는 페이지 (링크 타고 들어오거나 할 경우)
 import React from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';

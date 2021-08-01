@@ -17,7 +17,9 @@ module.exports = () => {
 
             // 패스워드가 일치하는지 확인
             const result = await bcrypt.compare(password, user.password);
+            
             if (result) { return done(null, user); } // 성공시 '사용자 정보(user)'를 넘겨줍니다.
+            
             return done(null, false, { reason: '비밀번호가 틀렸습니다.' });
         
         } catch (error) {
