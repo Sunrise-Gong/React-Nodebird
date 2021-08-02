@@ -24,12 +24,9 @@ const Home = () => {
 
     useEffect(() => {
         function onScroll() {
-            // console.log( 
-            //     window.scrollY, // 얼마나 내렸는지
-            //     document.documentElement.clientHeight, // 화면이 보이는 길이
-            //     document.documentElement.scrollHeight, // 총 세로 길이 
-            //     );
-            if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+            // console.log(`얼마나 내렸는지:${window.scrollY}`, `화면이 보이는 길이:${document.documentElement.clientHeight}`, `총 세로 길이:${document.documentElement.scrollHeight}`);
+            if (window.scrollY + document.documentElement.clientHeight 
+                > document.documentElement.scrollHeight - 300) {
                 if (hasMorePosts && !loadPostsLoading) { 
                     const lastId = mainPosts[mainPosts.length - 1]?.id;
                     dispatch({ type: LOAD_POSTS_REQUEST, lastId });
