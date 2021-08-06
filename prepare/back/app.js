@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require(helmet);
 
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
@@ -14,6 +16,7 @@ const hashtagRouter = require('./routes/hashtag');
 
 const db = require('./models');
 const passportConfig = require('./passport');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -28,9 +31,17 @@ db.sequelize.sync()
 //------------------------------------------
 passportConfig();
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined')); 
+    app.use(hpp()); 
+    app.use(helmet());
+    
+} else {
+    app.use(morgan('dev'));
+}
+
 app.use(cors({ 
-    origin: true,
+    origin: ['http://localhost:3060', 'nodebird.com' ],
     credentials: true,
 })); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
 
@@ -50,9 +61,7 @@ app.use(session({
 app.use(passport.initialize()); 
 app.use(passport.session());
 //----------------------------------------
-app.get('/', (req, res) => {
-    res.send('EC2 backend server on')
-})
+app.get('/', (req, res) => { res.send('EC2 backend server on') });
 
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
