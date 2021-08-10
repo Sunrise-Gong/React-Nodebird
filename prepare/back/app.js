@@ -41,7 +41,7 @@ app.use(cors({
     origin: [
         'http://localhost:3060', 
         'nodebird.com', 
-        'http://13.124.115.248',
+        'http://13.124.200.147',
     ],
     credentials: true,
 })); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
