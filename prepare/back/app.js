@@ -41,7 +41,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(cors({ 
-    origin: ['http://localhost:3060', 'nodebird.com' ],
+    origin: [
+        'http://localhost:3060', 
+        'nodebird.com', 
+        'http://13.124.115.248' ],
     credentials: true,
 })); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
 
