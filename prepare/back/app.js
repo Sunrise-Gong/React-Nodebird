@@ -32,15 +32,12 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('combined')); 
     app.use(hpp()); 
     app.use(helmet());
-    
-} else {
-    app.use(morgan('dev'));
-}
+    app.use(cors({ origin:'http://mayweather24.com', credentials: true }));
 
-app.use(cors({ 
-    origin: [ 'http://localhost:3060', 'http://mayweather24.com' ],
-    credentials: true,
-})); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
+} else {    
+    app.use(morgan('dev'));
+    app.use(cors({ origin: true, credentials: true }));
+}
 
 app.use('/', express.static(path.join(__dirname, 'uploads'))); // __dirname = 현재폴더 = back, 'uploads' 폴더
 
