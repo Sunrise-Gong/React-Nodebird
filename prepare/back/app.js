@@ -38,11 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(cors({ 
-    origin: [
-        'http://localhost:3060', 
-        'nodebird.com', 
-        'http://13.124.200.147',
-    ],
+    origin: [ 'http://localhost:3060', 'http://mayweather24.com' ],
     credentials: true,
 })); // credentials: flase -> 기본 값이 false 인데 false일 경우 생기는 문제가 있습니다.
 
@@ -60,6 +56,11 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: process.env.NODE_ENV === 'production' && '.mayweather24.com' 
+    }
 }));
 
 app.use(passport.initialize()); 
