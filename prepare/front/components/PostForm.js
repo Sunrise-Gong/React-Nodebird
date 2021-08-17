@@ -3,7 +3,6 @@ import { Button, Form, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';//액션
 import useInput from '../hooks/useInput';
-import { backUrl } from '../config/config';
 
 const PostForm = () => {
     const { imagePaths, addPostDone } = useSelector((state) => state.post);
@@ -74,7 +73,7 @@ const PostForm = () => {
             <div>
                 {imagePaths.map((v, i) => ( // 이미지 업로드 미리보기 부분
                     <div key={v} style={{ display: 'inline-block' }}>
-                        <img src={`${backUrl}/${v}`} style={{ width: '200px' }} alt={v} />
+                        <img src={v} style={{ width: '200px' }} alt={v} />
                         <div>
                             <Button onClick={onRemoveImage(i)}>제거</Button>
                         </div>
