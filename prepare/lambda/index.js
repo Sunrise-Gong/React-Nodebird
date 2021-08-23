@@ -11,7 +11,7 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
     const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase;
     const requiredFormat = ext === 'jpg' ? 'jpeg' : ext; 
     
-    console.log('버킷', Bucket, '키', key, '파일명', filename, '확장자', requiredFormat);
+    console.log('버킷', Bucket, '키', Key, '파일명', filename, '확장자', requiredFormat);
     
     try {
         const s3Object = await s3.getObject({ Bucket, key }).promise();
