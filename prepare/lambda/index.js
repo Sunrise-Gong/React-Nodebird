@@ -14,7 +14,7 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
     console.log('버킷', Bucket, '키', Key, '파일명', filename, '확장자', requiredFormat);
     
     try {
-        const s3Object = await s3.getObject({ Bucket, key }).promise();
+        const s3Object = await s3.getObject({ Bucket, Key }).promise();
         
         console.log('원본 이미지 용량', s3Object.Body.length);
 
