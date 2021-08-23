@@ -179,7 +179,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /pos
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => { // POST /post/images
     console.log(req.files);
     //res.json(req.files.map((v) => v.filename)); // v.filename = diskStorage로 저장된 파일명
-    res.json(req.files.map((v) => v.location)); // v.location = S3에 저장된 이미지 주소
+    res.json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/'))); // v.location = S3에 저장된 이미지 주소
 });
 
 // 리트윗
