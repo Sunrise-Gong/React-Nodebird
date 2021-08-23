@@ -8,7 +8,7 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
     const Bucket = event.Records[0].s3.bucket.name;
     const Key = decodeURIComponent(event.Records[0].s3.object.key);
     const filename = Key.split('/')[Key.split('/').length - 1];
-    const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase;
+    const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase();
     const requiredFormat = ext === 'jpg' ? 'jpeg' : ext; 
     
     console.log('버킷', Bucket, '키', Key, '파일명', filename, '확장자', requiredFormat);
