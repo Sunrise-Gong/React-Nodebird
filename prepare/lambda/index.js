@@ -30,7 +30,7 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
 
         console.log('원본 이미지 용량', s3Object.Body.length);
 
-        const resizedImage = await sharp(s3ObjectConvert.Body)
+        const resizedImage = await sharp(s3Object.Body)
             .resize(400, 400, { fit: 'inside' }) // 사이즈 변경
             .toFormat(requiredFormat) // 확장자 지정
             .toBuffer();
