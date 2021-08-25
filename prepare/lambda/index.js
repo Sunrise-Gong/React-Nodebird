@@ -10,23 +10,12 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
     const Key = decodeURIComponent(event.Records[0].s3.object.key);
     const filename = Key.split('/')[Key.split('/').length - 1];
     const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase();
-    const requiredFormat = ext === 'jpg' ? 'jpeg' : ext;
+    const requiredFormat = ext === 'jpg' || ext === 'heic' ? 'jpeg' : ext;
 
     console.log('버킷', Bucket, '키', Key, '파일명', filename, '확장자', requiredFormat);
 
     try {
-        const s3Object = await s3.getObject({ Bucket, Key }).promise()
-            .then(data => {
-                if (ext === 'heic') {
-                    return convert({
-                        buffer: data.Body,
-                        format: 'JPEG',
-                        quality: 1
-                    });
-                } else {
-                    return data.Body;
-                }
-            });
+        const s3Object = await s3.getObject({ Bucket, Key }).promise();
 
         console.log('원본 이미지 용량', s3Object.Body.length);
 
