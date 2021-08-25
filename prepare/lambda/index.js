@@ -15,14 +15,20 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
     console.log('버킷', Bucket, '키', Key, '파일명', filename, '확장자', requiredFormat);
 
     try {
-        const s3Object = await s3.getObject({ Bucket, Key }).promise();
+        const s3Object = await s3.getObject({ Bucket, Key }).promise()
+            .then(data => {
+                if (ext === 'heic') {
+                    return convert({
+                        buffer: data.Body,
+                        format: 'JPEG',
+                        quality: 1
+                    });
+                } else {
+                    return data.Body;
+                }
+            });
 
         console.log('원본 이미지 용량', s3Object.Body.length);
-
-        const s3ObjectConvert = await ext === 'heic' ? 
-        convert({ buffer: s3Object.Body, format: 'JPEG', quality: 1 }) : s3Object;
-
-        console.log('heic 컨버터', s3ObjectConvert);
 
         const resizedImage = await sharp(s3ObjectConvert.Body)
             .resize(400, 400, { fit: 'inside' }) // 사이즈 변경
