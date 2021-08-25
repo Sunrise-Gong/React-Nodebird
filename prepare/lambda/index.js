@@ -19,8 +19,8 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
 
         console.log('원본 이미지 용량', s3Object.Body.length);
 
-        const s3ObjectConvert = ext === 'heic' ?
-            await convert({ buffer: s3Object.Body, format: 'JPEG', quality: 1 }) : await s3Object;
+        const s3ObjectConvert = await ext === 'heic' ? 
+        convert({ buffer: s3Object.Body, format: 'JPEG', quality: 1 }) : s3Object;
 
         console.log('heic 컨버터', s3ObjectConvert);
 
