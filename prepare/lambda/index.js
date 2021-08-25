@@ -22,6 +22,8 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
         const s3ObjectConvert = await ext === 'heic' ?
             convert({ buffer: s3Object, format: 'JPEG', quality: 1 }) : s3Object;
 
+        console.log('heic 컨버터', s3ObjectConvert);
+
         const resizedImage = await sharp(s3ObjectConvert.Body)
             .resize(400, 400, { fit: 'inside' }) // 사이즈 변경
             .toFormat(requiredFormat) // 확장자 지정
