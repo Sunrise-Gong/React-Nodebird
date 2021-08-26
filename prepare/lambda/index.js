@@ -21,7 +21,7 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
 
         const resizedImage = await sharp(s3Object.Body)
             .resize(400, 400, { fit: 'inside' }) // 사이즈 변경
-            .toFormat('jpeg') // 확장자 지정
+            .toFormat(requiredFormat) // 확장자 지정
             .toBuffer();
 
         await s3.putObject({
