@@ -5,6 +5,7 @@ const convert = require('heic-convert');
 const s3 = new AWS.S3();
 
 exports.handler = async (event, context, callback) => { // callback은 passport 의 done 과 비슷합니다.
+    console.log('이벤트', event);
 
     const Bucket = event.Records[0].s3.bucket.name;
     const Key = decodeURIComponent(event.Records[0].s3.object.key);
@@ -16,7 +17,9 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
 
     try {
         const s3Object = await s3.getObject({ Bucket, Key }).promise();
-
+        
+        console.log('원본 이미지', s3Object)
+        
         console.log('원본 이미지 용량', s3Object.Body.length);
 
         const resizedImage = await sharp(s3Object.Body)
