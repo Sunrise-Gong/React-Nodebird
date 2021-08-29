@@ -14,10 +14,10 @@ exports.handler = async (event, context, callback) => { // callback은 passport 
     const requiredFormat = ext === 'jpg' || ext === 'heic' ? 'jpeg' : ext;
 
     console.log('버킷', Bucket, '키', Key, '파일명', filename, '확장자', requiredFormat);
-
+    // 버킷 nodebird-copy-s3 키 original/163004845243_cat.png 파일명 163004945243_cat.png 확장자 png
     try {
         const s3Object = await s3.getObject({ Bucket, Key }).promise();
-        
+
         console.log('원본 이미지', s3Object)
         
         console.log('원본 이미지 용량', s3Object.Body.length);
