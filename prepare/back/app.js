@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('combined')); 
     app.use(hpp()); 
     app.use(helmet());
-    app.use(cors({ origin:'http://mayweather24.com', credentials: true }));
+    app.use(cors({ origin:'https://mayweather24.com', credentials: true }));
 
 } else {    
     app.use(morgan('dev'));
@@ -75,7 +75,7 @@ app.use('/user', userRouter);
 
 app.use('/hashtag', hashtagRouter);
 
-app.listen(80, () => { console.log('서버 실행중!!'); });
+app.listen(3065, () => { console.log('서버 실행중!!'); });
 
 
 

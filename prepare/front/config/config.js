@@ -1,1 +1,1 @@
-export const backUrl = 'http://api.mayweather24.com';
+export const backUrl = 'https://api.mayweather24.com';
