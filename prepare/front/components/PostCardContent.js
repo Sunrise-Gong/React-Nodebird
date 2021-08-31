@@ -12,7 +12,7 @@ const PostCardContent = ({ postData }) => ( // postData = '안녕하세요 트�
             .map((v, i) => {
                 if (v.match(/(#[^\s#]+)/)) {
                     // import Link from 'next/link'; //
-                    return <Link href={`/hashtag/${v.slice(1)}`} key={i}><a>{v}</a></Link>;
+                    return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={i}><a>{v}</a></Link>;
                 }
 
                 return v;
