@@ -55,9 +55,9 @@ const User = () => {
                 <Card
                     style={{ marginBottom: 20 }}
                     actions={[
-                        <div key="twit">짹짹<br />{userInfo.Posts.length}</div>,
-                        <div key="following">팔로잉<br />{userInfo.Followings.length}</div>,
-                        <div key="follower">팔로워<br />{userInfo.Followers.length}</div>,
+                        <div key="twit">짹짹<br />{userInfo.Posts}</div>,
+                        <div key="following">팔로잉<br />{userInfo.Followings}</div>,
+                        <div key="follower">팔로워<br />{userInfo.Followers}</div>,
                     ]}>
                     <Card.Meta
                         avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
@@ -76,7 +76,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 
     context.store.dispatch({ type: LOAD_USER_POSTS_REQUEST, data: context.params.id });
     context.store.dispatch({ type: LOAD_MY_INFO_REQUEST });
-    context.store.dispatch({ type: LOAD_USER_REQUEST });
+    context.store.dispatch({ type: LOAD_USER_REQUEST, data: context.params.id });
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
 });
