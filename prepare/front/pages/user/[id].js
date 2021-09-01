@@ -18,7 +18,7 @@ const User = () => {
     const router = useRouter();
     const { id } = router.query;
 
-    const { userInfo } = useSelector((state) => state.user);
+    const { userInfo, me } = useSelector((state) => state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
 
     useEffect(() => { // 인피니티 스크롤
@@ -47,12 +47,13 @@ const User = () => {
                     <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
                     <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
                     <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-                    <meta property="og:image" content="https://nodebird.com/favicon.ico" />
-                    <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
+                    <meta property="og:image" content="https://mayweather24.com/favicon.ico" />
+                    <meta property="og:url" content={`https://api.mayweather24.com/user/${id}`} />
                 </Head>
             )}
-            {userInfo ? (
+            {userInfo && (userInfo.id !== me?.id) ? (
                 <Card
+                    style={{ marginBottom: 20 }}
                     actions={[
                         <div key="twit">짹짹<br />{userInfo.Posts}</div>,
                         <div key="following">팔로잉<br />{userInfo.Followings}</div>,
