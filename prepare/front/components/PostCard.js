@@ -72,7 +72,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                         content={(
                             <Button.Group>
                                 {id && post.User.id === id
-                                    ? (<><Button>수정</Button> <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button></>)
+                                    ? (<>{!post.RetweetId && <Button>수정</Button>} <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button></>)
                                     : <Button>신고</Button>}
                             </Button.Group>
                         )}>
