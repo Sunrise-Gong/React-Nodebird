@@ -21,7 +21,7 @@ const Profile = () => {
     const [followingsLimit, setFollowingsLimit] = useState(3);
     
     const { data: followersData, error: followerError } = useSWR(`https://api.mayweather24.com/user/followers?limit=${followersLimit}`, fetcher);
-    const { data: followingsData, error: followingError } = useSWR(`http://api.mayweather24.com/user/followings?limit=${followingsLimit}`, fetcher);
+    const { data: followingsData, error: followingError } = useSWR(`https://api.mayweather24.com/user/followings?limit=${followingsLimit}`, fetcher);
 
     // useEffect(() => {
     //     dispatch({ type: LOAD_FOLLOWERS_REQUEST });
