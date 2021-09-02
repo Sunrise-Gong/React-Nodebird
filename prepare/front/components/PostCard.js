@@ -21,6 +21,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
     const dispatch = useDispatch();
     // const [liked, setLiked] = useState(false);// 좋아요 버튼의 상태
     const [commentFormOpened, setCommentFormOpened] = useState(false); // 댓글창 열기 버튼의 상태
+    const [editMode, setEditMode] = useState(false);
 
     const id = useSelector((state) => state.user.me?.id); // user 리듀서: 로그인한 유저의 아이디
     const { removePostLoading } = useSelector((state) => state.post); // post 리듀서: 게시글 제거 상태
@@ -29,6 +30,8 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
 
     // useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]); // 포스트 카드 개수만큼 리렌더링 발생 index.js에서 실행해야 합니다.
     //------------------------------------------------
+    const onChangePost = useCallback(() => { setEditMode(true); }, []);
+
     const onLike = useCallback(() => { // 좋아요
         if (!id) { return alert('로그인이 필요합니다.'); }
         return dispatch({ type: LIKE_POST_REQUEST, data: post.id });
@@ -58,7 +61,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                 style={{ background: '#D3E0EE', borderRadius: '8px 8px 0px 0px' }}
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[ // 배열에 jsx 를 넣을 때는 항상 키가 필요합니다.
-                    
+
                     <RetweetOutlined key="retweet" onClick={onRetweet} />,
 
                     liked
@@ -72,8 +75,12 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                         content={(
                             <Button.Group>
                                 {id && post.User.id === id
-                                    ? (<>{!post.RetweetId && <Button>수정</Button>} <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button></>)
-                                    : <Button>신고</Button>}
+                                    ? (
+                                    <>
+                                    {!post.RetweetId && <Button onClick={onChangePost}>수정</Button>}
+                                    <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
+                                    </>
+                                    ) : <Button>신고</Button>}
                             </Button.Group>
                         )}>
                         <EllipsisOutlined />
@@ -100,16 +107,16 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                     )
                     : (
                         <>
-                        <div style={{ float: 'right' }}>{moment(post.createdAt).fromNow()}</div>
-                        <Card.Meta
-                            avatar={(
-                                <Link href={`https://mayweather24.com/user/${post.User.id}`} prefetch={false}>
-                                    <a><Avatar>{post.User.nickname[0]}</Avatar></a>
-                                </Link>
-                            )}
-                            title={post.User.nickname}
-                            description={<PostCardContent postData={post.content} />}
-                        />
+                            <div style={{ float: 'right' }}>{moment(post.createdAt).fromNow()}</div>
+                            <Card.Meta
+                                avatar={(
+                                    <Link href={`https://mayweather24.com/user/${post.User.id}`} prefetch={false}>
+                                        <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                                    </Link>
+                                )}
+                                title={post.User.nickname}
+                                description={<PostCardContent editMode={editMode} postData={post.content} />}
+                            />
                         </>
                     )}
             </Card>
