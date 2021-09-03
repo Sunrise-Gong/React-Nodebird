@@ -32,7 +32,7 @@ const PostCardContent = ({ postData, editMode, onChangePost, onCancelUpdate }) =
                         return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={i}><a>{v}</a></Link>;
                     }
                     return v;
-                })};
+                })}
         </div>
     );
 };
