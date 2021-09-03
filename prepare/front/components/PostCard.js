@@ -12,7 +12,7 @@ import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
 
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, UPDATE_POST_REQUEST } from '../reducers/post';
 
 //import moment from 'moment';
 moment.locale('ko'); // 한글로 바꿔주는 설정 (기본:영어)
@@ -30,7 +30,19 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
 
     // useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]); // 포스트 카드 개수만큼 리렌더링 발생 index.js에서 실행해야 합니다.
     //------------------------------------------------
-    const onChangePost = useCallback(() => { setEditMode(true); }, []);
+    const onClickUpdate = useCallback(() => { setEditMode(true); }, []); // 게시글 수정모드
+    
+    const onCancelUpdate = useCallback(() => { setEditMode(false); }, []); // 게시글 수정 취소
+
+    const onChangePost = useCallback((editText) => () => { // 게시글 수정 업데이트
+        dispatch({
+            type: UPDATE_POST_REQUEST,
+            data: {
+                PostId: post.id,
+                content: editText,
+            },
+        });
+    }, [post]);
 
     const onLike = useCallback(() => { // 좋아요
         if (!id) { return alert('로그인이 필요합니다.'); }
@@ -77,7 +89,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                 {id && post.User.id === id
                                     ? (
                                     <>
-                                    {!post.RetweetId && <Button onClick={onChangePost}>수정</Button>}
+                                    {!post.RetweetId && <Button onClick={onClickUpdate}>수정</Button>}
                                     <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                                     </>
                                     ) : <Button>신고</Button>}
@@ -101,7 +113,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
-                                description={<PostCardContent postData={post.Retweet.content} />}
+                                description={<PostCardContent postData={post.Retweet.content} onChange={onChangePost} onCancelUpdate={onCancelUpdate} />}
                             />
                         </Card>
                     )
@@ -115,7 +127,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                     </Link>
                                 )}
                                 title={post.User.nickname}
-                                description={<PostCardContent editMode={editMode} postData={post.content} />}
+                                description={<PostCardContent editMode={editMode} onChange={onChangePost} onCancelUpdate={onCancelUpdate} postData={post.content} />}
                             />
                         </>
                     )}

@@ -263,7 +263,7 @@ function* watchAddPost() {
 }
 
 //-------------------------------------------------- UPDATE_POST
-function updatePostAPI(data) { return axios.patch(`/post/${data.id}`, data); }
+function updatePostAPI(data) { return axios.patch(`/post/${data.PostId}`, data); }
 
 function* updatePost(action) {
     try {
