@@ -148,12 +148,24 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => { // DELETE
 
 // 게시글 수정
 router.patch('/:postId', isLoggedIn, async (req, res, next) => { // PATCH /post/1
+    const hashtags = req.body.content.match(/#[^\s#]+/g); //ex) #해시태그 #분리하기 테스트 -> ["#해시태그","#분리하기"]
+    
     try {
         await Post.update({
             content: req.body.content
         }, {
             where: { id: req.params.postId, UserId: req.user.id, }
         });
+        
+        const post = await Post.findOne({ where: { id: req.params.postId } });
+
+        if (hashtags) { // 해시태그가 있다면    
+            const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+                where: { name: tag.slice(1).toLowerCase() },
+            }))); // ["#해시태그","#분리하기"] -> [['해시태그', true], ['분리하기', true]] -> map 쓰는 이유
+
+            await post.setHashtags(result.map((v) => v[0]));// set: 기존 데이터를 날리고 새로운 데이터로
+        }
 
         res.status(200).json({ PostId: parseInt(req.params.postId, 10), content: req.body.content });
 

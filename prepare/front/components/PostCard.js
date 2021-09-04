@@ -21,7 +21,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
     const dispatch = useDispatch();
     // const [liked, setLiked] = useState(false);// 좋아요 버튼의 상태
     const [commentFormOpened, setCommentFormOpened] = useState(false); // 댓글창 열기 버튼의 상태
-    
+
     const [editMode, setEditMode] = useState(false);
 
     const id = useSelector((state) => state.user.me?.id); // user 리듀서: 로그인한 유저의 아이디
@@ -32,8 +32,8 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
     // useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]); // 포스트 카드 개수만큼 리렌더링 발생 index.js에서 실행해야 합니다.
     //------------------------------------------------
     const onClickUpdate = useCallback(() => { setEditMode(true); }, []); // 게시글 수정모드
-    
-    const onCancelUpdate = useCallback(() => { setEditMode(false); }, []); // 게시글 수정 취소
+
+    const onCancelUpdate = useCallback(() => { setEditMode(false); }, []); // 게시글 수정취소모드
 
     const onChangePost = useCallback((editText) => () => { // 게시글 수정 액션 디스패치
         dispatch({
@@ -89,10 +89,10 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                             <Button.Group>
                                 {id && post.User.id === id
                                     ? (
-                                    <>
-                                    {!post.RetweetId && <Button onClick={onClickUpdate}>수정</Button>}
-                                    <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
-                                    </>
+                                        <>
+                                            {!post.RetweetId && <Button onClick={onClickUpdate}>수정</Button>}
+                                            <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
+                                        </>
                                     ) : <Button>신고</Button>}
                             </Button.Group>
                         )}>
@@ -114,7 +114,9 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
-                                description={<PostCardContent postData={post.Retweet.content} onChangePost={onChangePost} onCancelUpdate={onCancelUpdate} />}
+                                description={(
+                                    <PostCardContent postData={post.Retweet.content} onChangePost={onChangePost} onCancelUpdate={onCancelUpdate} />
+                                )}
                             />
                         </Card>
                     )
@@ -128,7 +130,9 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                     </Link>
                                 )}
                                 title={post.User.nickname}
-                                description={<PostCardContent editMode={editMode} onChangePost={onChangePost} onCancelUpdate={onCancelUpdate} postData={post.content} />}
+                                description={(
+                                    <PostCardContent editMode={editMode} onChangePost={onChangePost} onCancelUpdate={onCancelUpdate} postData={post.content} />
+                                )}
                             />
                         </>
                     )}
