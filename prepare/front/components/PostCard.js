@@ -21,6 +21,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
     const dispatch = useDispatch();
     // const [liked, setLiked] = useState(false);// 좋아요 버튼의 상태
     const [commentFormOpened, setCommentFormOpened] = useState(false); // 댓글창 열기 버튼의 상태
+    
     const [editMode, setEditMode] = useState(false);
 
     const id = useSelector((state) => state.user.me?.id); // user 리듀서: 로그인한 유저의 아이디
@@ -34,7 +35,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
     
     const onCancelUpdate = useCallback(() => { setEditMode(false); }, []); // 게시글 수정 취소
 
-    const onChangePost = useCallback((editText) => () => { // 게시글 수정 업데이트
+    const onChangePost = useCallback((editText) => () => { // 게시글 수정 액션 디스패치
         dispatch({
             type: UPDATE_POST_REQUEST,
             data: {
@@ -113,7 +114,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
-                                description={<PostCardContent postData={post.Retweet.content} onChange={onChangePost} onCancelUpdate={onCancelUpdate} />}
+                                description={<PostCardContent postData={post.Retweet.content} onChangePost={onChangePost} onCancelUpdate={onCancelUpdate} />}
                             />
                         </Card>
                     )
@@ -127,7 +128,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                                     </Link>
                                 )}
                                 title={post.User.nickname}
-                                description={<PostCardContent editMode={editMode} onChange={onChangePost} onCancelUpdate={onCancelUpdate} postData={post.content} />}
+                                description={<PostCardContent editMode={editMode} onChangePost={onChangePost} onCancelUpdate={onCancelUpdate} postData={post.content} />}
                             />
                         </>
                     )}
