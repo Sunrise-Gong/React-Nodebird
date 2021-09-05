@@ -62,6 +62,7 @@ function retweetAPI(data) { return axios.post(`/post/${data}/retweet`); }
 function* retweet(action) {
     try {
         const result = yield call(retweetAPI, action.data);
+        console.log(result.data);
         yield put({
             type: RETWEET_SUCCESS,
             data: result.data,
