@@ -156,7 +156,7 @@ router.patch('/:postId', isLoggedIn, async (req, res, next) => { // PATCH /post/
         }, {
             where: { id: req.params.postId, UserId: req.user.id, }
         });
-        
+
         const post = await Post.findOne({ where: { id: req.params.postId } });
 
         if (hashtags) { // 해시태그가 있다면    
@@ -234,6 +234,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST 
             include: [
                 { model: Post, as: 'Retweet', include: [{ model: User, attributes: ['id', 'nickname'] }, { model: Image }] },
                 { model: User, attributes: ['id', 'nickname'] },
+                { model: User, as: 'Likers', attributes: ['id'] },
                 { model: Image },
                 { model: Comment, include: [{ model: User, attributes: ['id', 'nickname'] }] },
             ],
