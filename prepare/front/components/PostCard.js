@@ -144,7 +144,7 @@ const PostCard = ({ post }) => { // post: post 리듀서의 상태값중 'mainPo
                     <CommentForm post={post/* 게시글 아이디가 필요해서 넘겨줍니다  */} />
 
                     <List
-                        style={{ marginTop: 40 }}
+                        style={{ marginTop: 40, background: '#F4F6F8' }}
                         header={`${post.Comments.length}개의 댓글`}
                         itemLayout="horizontal"
                         dataSource={post.Comments}
