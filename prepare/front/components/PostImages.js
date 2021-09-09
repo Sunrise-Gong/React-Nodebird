@@ -39,7 +39,7 @@ const PostImages = ({ images }) => {
     if (images.length === 1) {
         return (
             <>
-                <picture>
+                <picture style={{ width: '100%' }}>
                     <source ref={imgEl} srcSet={`${images[0].src}`} />
                     <img
                         role="presentation"
