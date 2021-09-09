@@ -46,7 +46,7 @@ const PostImages = ({ images }) => {
                         onClick={onZoom}
                         src={`${images[0].src.replace('/thumb/', '/original/')}`}
                         alt={images[0].src}
-                        style={{ maxWidth: '100%', display: 'inline-block' }}
+                        style={{ /* maxWidth: '100%',*/ display: 'inline-block' }}
                     />
                 </picture>
                 {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
