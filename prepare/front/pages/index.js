@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'; //<-이거 안쓰면 eslint:recommended 설정에 걸림
 import { useDispatch, useSelector } from 'react-redux';
-import { END } from 'redux-saga';
+// import { END } from 'redux-saga'; // SSR
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
-import axios from 'axios';
+// import wrapper from '../store/configureStore'; // SSR
+// import axios from 'axios'; // SSR
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -17,10 +17,10 @@ const Home = () => {
     
     useEffect(() => { if (retweetError) { alert(retweetError); } }, [retweetError]);
 
-    // useEffect(() => { 
-    //     dispatch({ type: LOAD_POSTS_REQUEST }); 
-    //     dispatch({ type: LOAD_USER_REQUEST }); 
-    // }, []); // 첫 렌더링 후 실행
+    useEffect(() => { // CSR
+        dispatch({ type: LOAD_POSTS_REQUEST }); 
+        dispatch({ type: LOAD_MY_INFO_REQUEST }); 
+    }, []); // 첫 렌더링 후 실행
 
     useEffect(() => {
         function onScroll() {
@@ -45,23 +45,23 @@ const Home = () => {
     );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-    console.log('getServerSideProps 시작');
-    console.log('헤더', context.req.headers);
+// export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+//     console.log('getServerSideProps 시작');
+//     console.log('헤더', context.req.headers);
     
-    const cookie = context.req ? context.req.headers.cookie : '';
+//     const cookie = context.req ? context.req.headers.cookie : '';
     
-    axios.defaults.headers.Cookie = '';
-    if (context.req && cookie) { axios.defaults.headers.Cookie = cookie; }
+//     axios.defaults.headers.Cookie = '';
+//     if (context.req && cookie) { axios.defaults.headers.Cookie = cookie; }
     
-    context.store.dispatch({ type: LOAD_POSTS_REQUEST });
+//     context.store.dispatch({ type: LOAD_POSTS_REQUEST });
     
-    context.store.dispatch({ type: LOAD_MY_INFO_REQUEST }); 
+//     context.store.dispatch({ type: LOAD_MY_INFO_REQUEST }); 
     
-    context.store.dispatch(END);
-    console.log('getServerSideProps 끝');
+//     context.store.dispatch(END);
+//     console.log('getServerSideProps 끝');
 
-    await context.store.sagaTask.toPromise();
-});
+//     await context.store.sagaTask.toPromise();
+// });
 
 export default Home;
